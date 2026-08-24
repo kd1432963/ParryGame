@@ -1,11 +1,16 @@
 ﻿#include "Player.h"
 
 #include "../../main.h"
+#include "PlayerState.h"
+#include "../../StateMachine/StateMachine.h"
 
 //===========================================================
 // コンストラクタ・デストラクタ
 //===========================================================
-Player::Player()	= default;
+Player::Player()
+	:m_upStateMachine(std::make_unique<StateMachine<PlayerStateId>>())
+{
+}
 Player::~Player()	= default;
 
 //===========================================================
