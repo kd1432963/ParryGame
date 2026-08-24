@@ -278,6 +278,7 @@
     <ClInclude Include="Src\Application\GameObject\Camera\CameraBase.h" />
     <ClInclude Include="Src\Application\GameObject\Camera\FPSCamera\FPSCamera.h" />
     <ClInclude Include="Src\Application\GameObject\Camera\TPSCamera\TPSCamera.h" />
+    <ClInclude Include="Src\Application\GameObject\Enemy\Enemy.h" />
     <ClInclude Include="Src\Application\GameObject\Physics\GroundPhysics.h" />
     <ClInclude Include="Src\Application\GameObject\Player\Player.h" />
     <ClInclude Include="Src\Application\GameObject\Player\PlayerController.h" />
@@ -342,6 +343,7 @@
     <ClCompile Include="Src\Application\GameObject\Camera\CameraBase.cpp" />
     <ClCompile Include="Src\Application\GameObject\Camera\FPSCamera\FPSCamera.cpp" />
     <ClCompile Include="Src\Application\GameObject\Camera\TPSCamera\TPSCamera.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Enemy\Enemy.cpp" />
     <ClCompile Include="Src\Application\GameObject\Physics\GroundPhysics.cpp" />
     <ClCompile Include="Src\Application\GameObject\Player\Player.cpp" />
     <ClCompile Include="Src\Application\GameObject\Player\PlayerController.cpp" />

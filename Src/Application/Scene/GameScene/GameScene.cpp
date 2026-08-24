@@ -5,6 +5,7 @@
 #include "../../GameObject/Player/PlayerController.h"
 #include "../../GameObject/Stage/ArenaFloor.h"
 #include "../../GameObject/Camera/TPSCamera/TPSCamera.h"
+#include "../../GameObject/Enemy/Enemy.h"
 
 void GameScene::Event()
 {
@@ -33,6 +34,13 @@ void GameScene::Init()
 	auto player = std::make_shared<Player>();
 	player->Init();
 	AddObject(player);
+
+	//==========================================================
+	// 敵生成
+	//==========================================================
+	auto enemy = std::make_shared<Enemy>();
+	enemy->Init();
+	AddObject(enemy);
 
 	//==========================================================
 	// プレイヤーコントローラー生成

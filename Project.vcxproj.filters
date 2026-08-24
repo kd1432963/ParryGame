@@ -106,6 +106,9 @@
     <Filter Include="Src\Application\Physics">
       <UniqueIdentifier>{f7171d6f-7721-4bc8-8c73-027a95edec9a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\GameObject\Enemy">
+      <UniqueIdentifier>{4a4d8a5d-aa32-4928-ba33-02594fcad73b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -315,6 +318,9 @@
     <ClInclude Include="Src\Application\GameObject\Physics\GroundPhysics.h">
       <Filter>Src\Application\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Enemy\Enemy.h">
+      <Filter>Src\Application\GameObject\Enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -490,6 +496,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Physics\GroundPhysics.cpp">
       <Filter>Src\Application\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Enemy\Enemy.cpp">
+      <Filter>Src\Application\GameObject\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

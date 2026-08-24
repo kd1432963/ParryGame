@@ -40,6 +40,10 @@ void Player::Init()
 	}
 #endif
 
+	// 原点に配置
+	SetPos({ 0.0f, 0.0f, 0.0f });
+	UpdateWorldMatrix(GetPos());
+
 	// ステートマシンの状態登録
 	SetupStateMachine();
 }
