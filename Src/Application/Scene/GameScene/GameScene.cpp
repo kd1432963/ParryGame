@@ -3,7 +3,7 @@
 
 #include "../../GameObject/Player/Player.h"
 #include "../../GameObject/Player/PlayerController.h"
-#include "../../GameObject/Stage/Stage.h"
+#include "../../GameObject/Stage/ArenaFloor.h"
 #include "../../GameObject/Camera/TPSCamera/TPSCamera.h"
 
 void GameScene::Event()
@@ -22,9 +22,9 @@ void GameScene::Init()
 	//==========================================================
 	// ステージ生成
 	//==========================================================
-	auto stage = std::make_shared<Stage>();
-	stage->Init();
-	AddObject(stage);
+	auto arenaFloor = std::make_shared<ArenaFloor>();
+	arenaFloor->Init();
+	AddObject(arenaFloor);
 
 	//==========================================================
 	// カメラ生成

@@ -291,9 +291,6 @@
     <ClInclude Include="Src\Application\GameObject\Player\Player.h">
       <Filter>Src\Application\GameObject\Player</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Application\GameObject\Stage\Stage.h">
-      <Filter>Src\Application\GameObject\Stage</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Application\GameObject\Player\PlayerController.h">
       <Filter>Src\Application\GameObject\Player</Filter>
     </ClInclude>
@@ -308,6 +305,9 @@
     </ClInclude>
     <ClInclude Include="Src\Application\Combat\ParrySystem.h">
       <Filter>Src\Application\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Stage\ArenaFloor.h">
+      <Filter>Src\Application\GameObject\Stage</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -467,9 +467,6 @@
     <ClCompile Include="Src\Application\GameObject\Player\Player.cpp">
       <Filter>Src\Application\GameObject\Player</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Application\GameObject\Stage\Stage.cpp">
-      <Filter>Src\Application\GameObject\Stage</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Player\PlayerController.cpp">
       <Filter>Src\Application\GameObject\Player</Filter>
     </ClCompile>
@@ -481,6 +478,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Combat\ParrySystem.cpp">
       <Filter>Src\Application\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Stage\ArenaFloor.cpp">
+      <Filter>Src\Application\GameObject\Stage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
