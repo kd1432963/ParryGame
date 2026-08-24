@@ -2,6 +2,7 @@
 
 class AnimationPlayer;
 class ParrySystem;
+class GroundPhysics;
 
 template<class TStateId>
 class StateMachine;
@@ -59,6 +60,7 @@ private:
 	std::unique_ptr<StateMachine<PlayerStateId>>m_upStateMachine	= nullptr;
 	std::unique_ptr<AnimationPlayer>			m_upAnimationPlayer = nullptr;
 	std::unique_ptr<ParrySystem>				m_upParrySystem		= nullptr;
+	std::unique_ptr<GroundPhysics>				m_upGroundPhysics	= nullptr;
 	std::shared_ptr<KdModelWork>				m_spModel			= nullptr;
 
 	//===========================================================
@@ -80,4 +82,5 @@ private:
 	static constexpr float	kLocomotionBlendTime			= 0.15f;// 移動アニメーション切り替え時の補間時間
 	static constexpr float	kParryAnimationDuration			= 0.55f;// パリィアニメーションの再生時間
 	static constexpr float	kActionBlendTime				= 0.06f;// アクションアニメーション切り替え時の補間時間
+	static constexpr float	kFootOffsetY					= 0.0f; // 足元のオフセット（地面判定用）
 };

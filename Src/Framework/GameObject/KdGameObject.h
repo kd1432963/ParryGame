@@ -66,6 +66,9 @@ public:
 	bool Intersects(const KdCollider::BoxInfo& targetBox, std::list<KdCollider::CollisionResult>* pResults);
 	bool Intersects(const KdCollider::RayInfo& targetShape, std::list<KdCollider::CollisionResult>* pResults);
 
+	// 08/04 追加：デバッグ用のワイヤーフレーム描画を行うクラスを取得する
+	KdDebugWireFrame* GetDebugWire() const{ return m_pDebugWire.get(); }
+
 protected:
 
 	void Release() {}

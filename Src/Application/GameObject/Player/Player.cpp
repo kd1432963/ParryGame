@@ -5,6 +5,7 @@
 #include "../../StateMachine/StateMachine.h"
 #include "../../Animation/AnimationPlayer.h"
 #include "../../Combat/ParrySystem.h"
+#include "../Physics/GroundPhysics.h"
 
 //===========================================================
 // コンストラクタ・デストラクタ
@@ -12,7 +13,8 @@
 Player::Player()
 	:	m_upStateMachine(std::make_unique<StateMachine<PlayerStateId>>()),
 		m_upAnimationPlayer(std::make_unique<AnimationPlayer>()),
-		m_upParrySystem(std::make_unique<ParrySystem>())
+		m_upParrySystem(std::make_unique<ParrySystem>()),
+		m_upGroundPhysics(std::make_unique<GroundPhysics>())
 {
 }
 Player::~Player()	= default;
@@ -31,6 +33,13 @@ void Player::Init()
 		);
 	}
 
+#ifdef _DEBUG
+	if (!m_pDebugWire)
+	{
+		m_pDebugWire = std::make_unique<KdDebugWireFrame>();
+	}
+#endif
+
 	// ステートマシンの状態登録
 	SetupStateMachine();
 }
@@ -42,17 +51,28 @@ void Player::Update()
 {
 	const float deltaTime = Application::Instance().GetDeltaTime();
 
-	// 現在状態のUpdateだけを実行する
+	// 現在状態の Update だけを実行する
 	if (m_upStateMachine)
 	{
 		m_upStateMachine->Update(deltaTime);
 	}
 
+	// アニメーションを更新する
 	if (m_upAnimationPlayer && m_spModel)
 	{
 		m_upAnimationPlayer->Update(
 			*m_spModel,
 			deltaTime
+		);
+	}
+
+	// 行動状態にかかわらず、最後に地面へ接地させる
+	if (m_upGroundPhysics)
+	{
+		m_upGroundPhysics->Update(
+			*this,
+			deltaTime,
+			kFootOffsetY
 		);
 	}
 }

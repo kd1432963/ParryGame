@@ -103,6 +103,9 @@
     <Filter Include="Src\Application\Combat">
       <UniqueIdentifier>{6e22b070-2b6a-4f0c-8af0-e7d2c066f516}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Physics">
+      <UniqueIdentifier>{f7171d6f-7721-4bc8-8c73-027a95edec9a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -309,6 +312,9 @@
     <ClInclude Include="Src\Application\GameObject\Stage\ArenaFloor.h">
       <Filter>Src\Application\GameObject\Stage</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Physics\GroundPhysics.h">
+      <Filter>Src\Application\Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -481,6 +487,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Stage\ArenaFloor.cpp">
       <Filter>Src\Application\GameObject\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Physics\GroundPhysics.cpp">
+      <Filter>Src\Application\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -12,6 +12,18 @@ void ArenaFloor::Init()
 		);
 	}
 
+	// モデルの形状を、接地とカメラのめり込み防止判定として登録する
+	if (m_spModel && !m_pCollider)
+	{
+		m_pCollider = std::make_unique<KdCollider>();
+
+		m_pCollider->RegisterCollisionShape(
+			"Ground",
+			m_spModel,
+			KdCollider::TypeGround | KdCollider::TypeSight
+		);
+	}
+
 	// 拡大率をステージ用に設定
 	SetScale(20.0f);
 }
