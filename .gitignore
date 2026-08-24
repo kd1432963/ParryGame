@@ -1,0 +1,24 @@
+# Visual Studio
+/.vs/
+/x64/
+/Debug/
+/Release/
+/Project/x64/
+/Project/Debug/
+/Project/Release/
+
+# Local packages
+/packages/
+
+# User-specific and build files
+*.user
+*.suo
+*.VC.db
+*.VC.opendb
+*.obj
+*.pch
+*.pdb
+*.ilk
+*.tlog
+*.lastbuildstate
+*.log
