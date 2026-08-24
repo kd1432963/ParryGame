@@ -3,12 +3,14 @@
 #include "../../main.h"
 #include "PlayerState.h"
 #include "../../StateMachine/StateMachine.h"
+#include"../../Animation/AnimationPlayer.h"
 
 //===========================================================
 // コンストラクタ・デストラクタ
 //===========================================================
 Player::Player()
-	:m_upStateMachine(std::make_unique<StateMachine<PlayerStateId>>())
+	:	m_upStateMachine(std::make_unique<StateMachine<PlayerStateId>>()),
+		m_upAnimationPlayer(std::make_unique<AnimationPlayer>())
 {
 }
 Player::~Player()	= default;
@@ -26,6 +28,9 @@ void Player::Init()
 				"Asset/Models/Player/Player.gltf")
 		);
 	}
+
+	// ステートマシンの状態登録
+	SetupStateMachine();
 }
 
 //===========================================================
@@ -33,15 +38,21 @@ void Player::Init()
 //===========================================================
 void Player::Update()
 {
-	// デルタタイム取得
-	float deltaTime		= Application::Instance().GetDeltaTime();
+	const float deltaTime = Application::Instance().GetDeltaTime();
 
-	UpdateYaw(deltaTime);
+	// 現在状態のUpdateだけを実行する
+	if (m_upStateMachine)
+	{
+		m_upStateMachine->Update(deltaTime);
+	}
 
-	// 行列作成
-	Math::Matrix rot	= Math::Matrix::CreateRotationY(m_yaw);
-	Math::Matrix trans	= Math::Matrix::CreateTranslation(m_mWorld.Translation() + m_moveDir * kMoveSpeed * deltaTime);
-	m_mWorld			= rot * trans;
+	if (m_upAnimationPlayer && m_spModel)
+	{
+		m_upAnimationPlayer->Update(
+			*m_spModel,
+			deltaTime
+		);
+	}
 }
 
 //===========================================================
@@ -75,4 +86,48 @@ void Player::UpdateYaw(float deltaTime)
 
 	// std::clamp で1フレームの回転量を制限し、現在の Yaw に加算
 	m_yaw += std::clamp(angleDiff, -maxRotate, maxRotate);
+}
+
+//===========================================================
+// ワールド行列更新関数
+//===========================================================
+void Player::UpdateWorldMatrix(const Math::Vector3& position)
+{
+	const Math::Matrix	scale		= Math::Matrix::CreateScale(m_modelScale);
+	const Math::Matrix	rotation	= Math::Matrix::CreateRotationY(m_yaw);
+	const Math::Matrix	translation = Math::Matrix::CreateTranslation(position);
+
+	m_mWorld = scale * rotation * translation;
+}
+
+//===========================================================
+// 移動アニメーション再生関数
+//===========================================================
+void Player::PlayLocomotionAnimation()
+{
+	if (!m_upAnimationPlayer || !m_spModel) return;
+
+	const bool	isMoving				= m_moveDir.LengthSquared() > 0.01f;
+	std::string	animationName			= "PlayerBlindEcho_Idle";
+	float		animationReferenceSpeed = 1.0f;
+
+	if (isMoving)
+	{
+		animationName = "PlayerBlindEcho_Run";
+		animationReferenceSpeed = kRunAnimationReferenceSpeed;
+	}
+
+	const float	moveSpeed		= m_isDashing ? kDashSpeed : kWalkSpeed;
+	const float	playbackSpeed	= isMoving ? moveSpeed / animationReferenceSpeed : 1.0f;
+
+	m_upAnimationPlayer->Play(
+		*m_spModel,
+		animationName,
+		true,
+		0.0f,
+		kLocomotionBlendTime
+	);
+
+	// 座標の移動速度を変えても、足運びが同じ割合で追従する
+	m_upAnimationPlayer->SetAnimationSpeed(playbackSpeed);
 }

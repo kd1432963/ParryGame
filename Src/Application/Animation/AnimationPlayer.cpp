@@ -129,6 +129,12 @@ void AnimationPlayer::SetAnimation(
 		m_blendTime		= 0.0f;
 		m_blendElapsed	= 0.0f;
 	}
+
+	// KdAnimatorへ実際にアニメーションを設定する
+	m_upAnimator->SetAnimation(animation, isLoop);
+
+	// アニメーション設定済みにする
+	m_hasAnimation = true;
 }
 
 //===========================================================

@@ -94,6 +94,12 @@
     <Filter Include="Src\Application\GameObject\Stage">
       <UniqueIdentifier>{c865f019-cd55-4fb2-a651-51b1b792e110}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\StateMachine">
+      <UniqueIdentifier>{5a699d0c-3512-49ba-862a-85da25895271}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Animation">
+      <UniqueIdentifier>{cd094a35-0374-42ca-9fe2-dec1a8c08d4b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -288,6 +294,15 @@
     <ClInclude Include="Src\Application\GameObject\Player\PlayerController.h">
       <Filter>Src\Application\GameObject\Player</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\StateMachine\StateMachine.h">
+      <Filter>Src\Application\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Player\PlayerState.h">
+      <Filter>Src\Application\GameObject\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Animation\AnimationPlayer.h">
+      <Filter>Src\Application\Animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -451,6 +466,12 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Player\PlayerController.cpp">
       <Filter>Src\Application\GameObject\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Player\PlayerState.cpp">
+      <Filter>Src\Application\GameObject\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Animation\AnimationPlayer.cpp">
+      <Filter>Src\Application\Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

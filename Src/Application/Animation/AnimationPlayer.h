@@ -11,7 +11,7 @@ public:
 	// コンストラクタ・デストラクタ
 	//===========================================================
 	AnimationPlayer();
-	~AnimationPlayer() override;
+	~AnimationPlayer();
 
 	//===========================================================
 	// 公開関数
@@ -23,7 +23,7 @@ public:
 		const std::string& animationName,
 		bool				isLoop,
 		float				targetDuration	= 0.0f,
-		float				blendDuration	= 0.12f,
+		float				blendTime		= 0.12f,
 		bool				forceRestart	= false
 	);
 
