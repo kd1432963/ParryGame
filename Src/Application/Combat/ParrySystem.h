@@ -9,7 +9,7 @@ private:
 
 	enum class ParryState
 	{
-		None,			// パリィ受付中ではない
+		Ready,			// パリィ受付可能状態
 		ParryAccept,	// パリィ受付中
 		ParryRecovery,	// パリィ後のリカバリー中
 	};
@@ -25,26 +25,21 @@ public:
 	//===========================================================
 	// 公開関数
 	//===========================================================
-	// パリィを開始できた場合だけtrueを返す
 	bool Start();
-
-	// 受付時間とリカバリー時間を進める
 	void Update(float deltaTime);
-
-	// パリィ成功時に受付を終了する
 	void Success();
-
-	// 別の状態へ遷移したとき、パリィを即座に終了する
 	void Cancel();
 
+	// パリィ受付中かを返す
 	bool IsActive() const
 	{
 		return m_parryState == ParryState::ParryAccept;
 	}
 
+	// パリィ受付中か、リカバリー中かを返す
 	bool IsBusy() const
 	{
-		return m_parryState != ParryState::None;
+		return m_parryState != ParryState::Ready;
 	}
 
 	// パリィ入力後、攻撃を受け止められる秒数を返す
@@ -53,13 +48,12 @@ public:
 		return kActiveTime;
 	}
 
-
 private:
 
 	//===========================================================
 	// 状態値
 	//===========================================================
-	ParryState	m_parryState	= ParryState::None;
+	ParryState	m_parryState	= ParryState::Ready;
 	float		m_timer			= 0.0f;
 
 	//===========================================================

@@ -3,14 +3,16 @@
 #include "../../main.h"
 #include "PlayerState.h"
 #include "../../StateMachine/StateMachine.h"
-#include"../../Animation/AnimationPlayer.h"
+#include "../../Animation/AnimationPlayer.h"
+#include "../../Combat/ParrySystem.h"
 
 //===========================================================
 // コンストラクタ・デストラクタ
 //===========================================================
 Player::Player()
 	:	m_upStateMachine(std::make_unique<StateMachine<PlayerStateId>>()),
-		m_upAnimationPlayer(std::make_unique<AnimationPlayer>())
+		m_upAnimationPlayer(std::make_unique<AnimationPlayer>()),
+		m_upParrySystem(std::make_unique<ParrySystem>())
 {
 }
 Player::~Player()	= default;
@@ -67,6 +69,18 @@ void Player::DrawLit()
 }
 
 //===========================================================
+// パリィ要求関数
+//===========================================================
+void Player::RequestParry()
+{
+	if (!m_upStateMachine || !m_upParrySystem)						return;
+	if (!m_upStateMachine->IsCurrentState(PlayerStateId::Normal))	return;
+	if (m_upParrySystem->IsBusy())									return;
+
+	m_upStateMachine->ChangeState(PlayerStateId::Parry);
+}
+
+//===========================================================
 // Yaw 更新関数
 //===========================================================
 void Player::UpdateYaw(float deltaTime)
@@ -113,7 +127,7 @@ void Player::PlayLocomotionAnimation()
 
 	if (isMoving)
 	{
-		animationName = "PlayerBlindEcho_Run";
+		animationName			= "PlayerBlindEcho_Run";
 		animationReferenceSpeed = kRunAnimationReferenceSpeed;
 	}
 

@@ -100,6 +100,9 @@
     <Filter Include="Src\Application\Animation">
       <UniqueIdentifier>{cd094a35-0374-42ca-9fe2-dec1a8c08d4b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Combat">
+      <UniqueIdentifier>{6e22b070-2b6a-4f0c-8af0-e7d2c066f516}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -303,6 +306,9 @@
     <ClInclude Include="Src\Application\Animation\AnimationPlayer.h">
       <Filter>Src\Application\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Combat\ParrySystem.h">
+      <Filter>Src\Application\Combat</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -472,6 +478,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Animation\AnimationPlayer.cpp">
       <Filter>Src\Application\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Combat\ParrySystem.cpp">
+      <Filter>Src\Application\Combat</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -94,5 +94,5 @@ void PlayerController::UpdateParry()
 
 	if (!player) return;
 
-	//player->RequestParry();
+	player->RequestParry();
 }

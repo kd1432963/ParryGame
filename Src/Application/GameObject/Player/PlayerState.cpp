@@ -2,6 +2,8 @@
 
 #include "Player.h"
 #include "../../StateMachine/StateMachine.h"
+#include "../../Combat/ParrySystem.h"
+#include "../../Animation/AnimationPlayer.h"
 
 //===========================================================
 // ステートマシンの状態登録
@@ -83,15 +85,51 @@ void Player::UpdateNormal(float deltaTime)
 //===========================================================
 void Player::EnterParry()
 {
-	// パリィ状態に入ったときの処理
+	// パリィ中は移動を止め、受付と専用モーションを開始する
+	m_moveDir	= Math::Vector3::Zero;
+	m_isDashing = false;
+
+	if (m_upParrySystem)
+	{
+		m_upParrySystem->Start();
+	}
+
+	if (m_upAnimationPlayer && m_spModel)
+	{
+		m_upAnimationPlayer->Play(
+			*m_spModel,
+			"PlayerBlindEcho_Parry",
+			false,
+			kParryAnimationDuration,
+			kActionBlendTime
+		);
+	}
+
+#ifdef _DEBUG
+	KdDebugGUI::Instance().AddLog("Parry Start\n");
+#endif
 }
 
 void Player::UpdateParry(float deltaTime)
 {
-	// パリィ状態の更新処理
+	// パリィシステムが存在しない場合は通常状態に戻す
+	if (!m_upParrySystem)
+	{
+		m_upStateMachine->ChangeState(PlayerStateId::Normal);
+		return;
+	}
+
+	// パリィシステムを更新する
+	m_upParrySystem->Update(deltaTime);
+
+	// パリィシステムがビジー状態でない場合は通常状態に戻す
+	if (m_upParrySystem->IsBusy()) return;
+	m_upStateMachine->ChangeState(PlayerStateId::Normal);
 }
 
 void Player::ExitParry()
 {
-	// パリィ状態から抜けるときの処理
+	if (!m_upParrySystem) return;
+
+	m_upParrySystem->Cancel();
 }
