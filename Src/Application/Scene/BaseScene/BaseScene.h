@@ -1,15 +1,24 @@
 ﻿#pragma once
 
-#include"../../GameObject/Camera/CameraBase.h"
+class CameraBase;
 
+//===========================================================
+// シーンの基底クラス
+//===========================================================
 class BaseScene
 {
 public :
 
+	//===========================================================
+	// コンストラクタ・デストラクタ
+	//===========================================================
 	BaseScene()				{}
 	virtual ~BaseScene()	{}
 
-	virtual void Init();
+	//===========================================================
+	// 基本ライフサイクル
+	//===========================================================
+	virtual void Init() = 0;
 
 	void PreUpdate();
 	void Update();
@@ -37,9 +46,12 @@ protected :
 	// 継承先シーンで必要ならオーバーライドする
 	virtual void Event();
 
+	// Debug ビルド時だけ呼ばれる開発用更新処理
+	virtual void DebugUpdate();
+
 	// カメラオブジェクト
-	std::shared_ptr<CameraBase> m_Camera = nullptr;
+	std::shared_ptr<CameraBase>					m_Camera = nullptr;
 
 	// 全オブジェクトのアドレスをリストで管理
-	std::list<std::shared_ptr<KdGameObject>> m_objList;
+	std::list<std::shared_ptr<KdGameObject>>	m_objList;
 };

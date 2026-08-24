@@ -1,6 +1,6 @@
 ﻿#include "GameScene.h"
-#include "../SceneManager.h"
 
+#include "../SceneManager.h"
 #include "../../GameObject/Player/Player.h"
 #include "../../GameObject/Player/PlayerController.h"
 #include "../../GameObject/Stage/ArenaFloor.h"
@@ -8,13 +8,7 @@
 
 void GameScene::Event()
 {
-	if (GetAsyncKeyState('T') & 0x8000)
-	{
-		SceneManager::Instance().SetNextScene
-		(
-			SceneManager::SceneType::Title
-		);
-	}
+	
 }
 
 void GameScene::Init()
@@ -52,4 +46,18 @@ void GameScene::Init()
 	// カメラのターゲットをプレイヤーに設定
 	//==========================================================
 	camera->SetTarget(player);
+}
+
+//==========================================================
+// デバッグ用更新処理
+//==========================================================
+void GameScene::DebugUpdate()
+{
+	if (GetAsyncKeyState('T') & 0x8000)
+	{
+		SceneManager::Instance().SetNextScene
+		(
+			SceneManager::SceneType::Title
+		);
+	}
 }

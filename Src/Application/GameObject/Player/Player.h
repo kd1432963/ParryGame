@@ -9,6 +9,9 @@ class StateMachine;
 
 enum class PlayerStateId;
 
+//===========================================================
+// プレイヤーキャラクター
+//===========================================================
 class Player : public KdGameObject
 {
 public:
