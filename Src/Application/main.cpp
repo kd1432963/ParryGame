@@ -192,7 +192,10 @@ bool Application::Init(int w, int h)
 	//===================================================================
 	// imgui初期化
 	//===================================================================
-	KdDebugGUI::Instance().GuiInit(w, h);
+	if(deviceDebugMode)
+	{
+		KdDebugGUI::Instance().GuiInit(w, h);
+	}
 
 	//===================================================================
 	// シェーダー初期化
@@ -317,6 +320,10 @@ void Application::Execute()
 		//=========================================
 
 		m_fpsController.Update();
+
+		// タイトルバーに FPS 表示
+		std::string title = "ParryGame FPS: " + std::to_string(m_fpsController.m_nowfps);
+		SetWindowTextA(m_window.GetWndHandle(), title.c_str());
 	}
 
 	//===================================================================
