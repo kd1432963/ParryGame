@@ -109,6 +109,9 @@
     <Filter Include="Src\Application\GameObject\Enemy">
       <UniqueIdentifier>{4a4d8a5d-aa32-4928-ba33-02594fcad73b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\GameObject\Enemy\ResonanceProjectile">
+      <UniqueIdentifier>{2a850f18-fa8e-47a7-b58f-6a9742502368}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -321,6 +324,24 @@
     <ClInclude Include="Src\Application\GameObject\Enemy\Enemy.h">
       <Filter>Src\Application\GameObject\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Enemy\EnemyState.h">
+      <Filter>Src\Application\GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Enemy\EnemyConfig.h">
+      <Filter>Src\Application\GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Combat\IParryable.h">
+      <Filter>Src\Application\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Combat\AttackHitBox.h">
+      <Filter>Src\Application\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Combat\AttackInfo.h">
+      <Filter>Src\Application\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Enemy\ResonanceProjectile\ResonanceProjectile.h">
+      <Filter>Src\Application\GameObject\Enemy\ResonanceProjectile</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -499,6 +520,18 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Enemy\Enemy.cpp">
       <Filter>Src\Application\GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Enemy\EnemyState.cpp">
+      <Filter>Src\Application\GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Enemy\EnemyConfig.cpp">
+      <Filter>Src\Application\GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Combat\AttackHitBox.cpp">
+      <Filter>Src\Application\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Enemy\ResonanceProjectile\ResonanceProjectile.cpp">
+      <Filter>Src\Application\GameObject\Enemy\ResonanceProjectile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

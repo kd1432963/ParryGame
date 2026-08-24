@@ -6,6 +6,8 @@
 #include "../../Animation/AnimationPlayer.h"
 #include "../../Combat/ParrySystem.h"
 #include "../Physics/GroundPhysics.h"
+#include "../../Combat/AttackInfo.h"
+#include "../../Combat/IParryable.h"
 
 //===========================================================
 // コンストラクタ・デストラクタ
@@ -33,6 +35,17 @@ void Player::Init()
 		);
 	}
 
+	if (!m_pCollider)
+	{
+		m_pCollider = std::make_unique<KdCollider>();
+		m_pCollider->RegisterCollisionShape(
+			"Player",
+			Math::Vector3(0.0f, kBodyCenterY, 0.0f),
+			kBodyRadius,
+			KdCollider::TypeDamage
+		);
+	}
+
 #ifdef _DEBUG
 	if (!m_pDebugWire)
 	{
@@ -56,13 +69,10 @@ void Player::Update()
 	const float deltaTime = Application::Instance().GetDeltaTime();
 
 	// 現在状態の Update だけを実行する
-	if (m_upStateMachine)
-	{
-		m_upStateMachine->Update(deltaTime);
-	}
+	m_upStateMachine->Update(deltaTime);
 
 	// アニメーションを更新する
-	if (m_upAnimationPlayer && m_spModel)
+	if (m_spModel)
 	{
 		m_upAnimationPlayer->Update(
 			*m_spModel,
@@ -102,6 +112,73 @@ void Player::RequestParry()
 	if (m_upParrySystem->IsBusy())									return;
 
 	m_upStateMachine->ChangeState(PlayerStateId::Parry);
+}
+
+//===========================================================
+// HitBox に当たった際の処理関数
+//===========================================================
+void Player::OnHit(const AttackInfo& info)
+{
+	if (IsDead()) return;
+
+	const auto	attacker = info.attacker.lock();
+	const auto	parryable = std::dynamic_pointer_cast<IParryable>(attacker);
+
+	// 受付中かつ、攻撃者がパリィ可能なら成功
+	if (m_upParrySystem->IsActive() && parryable)
+	{
+		m_upParrySystem->Success();
+
+		const ParryResult parryResult = parryable->OnParried();
+
+		// 成功時は即座に通常状態へ戻して、
+		// 次のパリィ入力を受け付けられるようにする
+		m_upStateMachine->ChangeState(PlayerStateId::Normal);
+
+		return;
+	}
+
+	const int hpBeforeDamage = m_hp;
+
+	TakeDamage(info.damage);
+
+	if (m_hp >= hpBeforeDamage)return;
+
+	// ノックバック方向を計算する
+	m_damageDirection = Math::Vector3::Zero;
+	if (attacker)
+	{
+		m_damageDirection = GetPos() - attacker->GetPos();
+		m_damageDirection.y = 0.0f;
+
+		if (m_damageDirection.LengthSquared() > 0.0001f)
+		{
+			m_damageDirection.Normalize();
+		}
+	}
+
+	// Damage 中に再び攻撃された場合も硬直時間を延長する
+	m_damageTimer = 0.0f;
+
+	m_upStateMachine->ChangeState(PlayerStateId::Damage);
+}
+
+//===========================================================
+// ダメージ処理関数
+//===========================================================
+void Player::TakeDamage(int damage)
+{
+	if (damage <= 0) return;
+
+	m_hp = std::max(0, m_hp - damage);
+
+#ifdef _DEBUG
+	KdDebugGUI::Instance().AddLog("Player HP = %d\n", m_hp);
+#endif
+
+	if (!IsDead()) return;
+
+	m_upStateMachine->ChangeState(PlayerStateId::Dead);
 }
 
 //===========================================================

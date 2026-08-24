@@ -6,6 +6,7 @@
 #include "../../GameObject/Stage/ArenaFloor.h"
 #include "../../GameObject/Camera/TPSCamera/TPSCamera.h"
 #include "../../GameObject/Enemy/Enemy.h"
+#include "../../GameObject/Enemy/EnemyConfig.h"
 
 void GameScene::Event()
 {
@@ -14,6 +15,9 @@ void GameScene::Event()
 
 void GameScene::Init()
 {
+	// モデルの色が暗く潰れないように環境光を設定する
+	KdShaderManager::Instance().WorkAmbientController().SetAmbientLight(Math::Vector4(0.85f, 0.85f, 0.90f, 1.0f));
+
 	//==========================================================
 	// ステージ生成
 	//==========================================================
@@ -38,8 +42,14 @@ void GameScene::Init()
 	//==========================================================
 	// 敵生成
 	//==========================================================
-	auto enemy = std::make_shared<Enemy>();
+	auto enemy = std::make_shared<Enemy>(EnemyType::ResonanceCaster);
 	enemy->Init();
+	enemy->SetPlayer(player);
+	AddObject(enemy);
+
+	enemy = std::make_shared<Enemy>(EnemyType::Golem);
+	enemy->Init();
+	enemy->SetPlayer(player);
 	AddObject(enemy);
 
 	//==========================================================

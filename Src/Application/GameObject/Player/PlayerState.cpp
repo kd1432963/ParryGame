@@ -33,18 +33,18 @@ void Player::SetupStateMachine()
 	//===========================================================
 	m_upStateMachine->RegisterState(
 		PlayerStateId::Damage,
-		[this]() { /* Enter処理 */ },
-		[this](float deltaTime) { /* Update処理 */ },
-		[this]() { /* Exit処理 */ }
+		[this]() { EnterDamage(); },
+		[this](float deltaTime) { UpdateDamage(deltaTime); },
+		nullptr
 	);
 	//===========================================================
 	// 死亡状態
 	//===========================================================
 	m_upStateMachine->RegisterState(
 		PlayerStateId::Dead,
-		[this]() { /* Enter処理 */ },
-		[this](float deltaTime) { /* Update処理 */ },
-		[this]() { /* Exit処理 */ }
+		[this]() { EnterDead(); },
+		nullptr,
+		nullptr
 	);
 
 	m_upStateMachine->Start(PlayerStateId::Normal);
@@ -132,4 +132,71 @@ void Player::ExitParry()
 	if (!m_upParrySystem) return;
 
 	m_upParrySystem->Cancel();
+}
+
+//===========================================================
+// Damage
+//===========================================================
+void Player::EnterDamage()
+{
+	m_moveDir		= Math::Vector3::Zero;
+	m_damageTimer	= 0.0f;
+	m_isDashing		= false;
+
+	if (m_upAnimationPlayer && m_spModel)
+	{
+		// 被弾硬直と同じ時間でモーションを最後まで再生する
+		m_upAnimationPlayer->Play(
+			*m_spModel,
+			"PlayerBlindEcho_Hit",
+			false,
+			kDamageDuration,
+			kActionBlendTime
+		);
+	}
+}
+
+void Player::UpdateDamage(float deltaTime)
+{
+	m_damageTimer += deltaTime;
+
+	const float remainRate = 1.0f - std::clamp(
+		m_damageTimer / kDamageDuration,
+		0.0f,
+		1.0f
+	);
+
+	Math::Vector3 position = GetPos();
+
+	position += m_damageDirection *
+		kDamageKnockbackSpeed *
+		remainRate *
+		deltaTime;
+
+	UpdateWorldMatrix(position);
+
+	if (m_damageTimer < kDamageDuration) return;
+
+	m_upStateMachine->ChangeState(PlayerStateId::Normal);
+}
+
+//===========================================================
+// Dead
+//===========================================================
+void Player::EnterDead()
+{
+	// 死亡後は入力が残っていても移動しない
+	m_moveDir	= Math::Vector3::Zero;
+	m_isDashing = false;
+
+	if (m_upAnimationPlayer && m_spModel)
+	{
+		m_upAnimationPlayer->Play(
+			*m_spModel,
+			"PlayerBlindEcho_Death",
+			false,
+			kDeathAnimationDuration,
+			kActionBlendTime
+		);
+	}
 }
