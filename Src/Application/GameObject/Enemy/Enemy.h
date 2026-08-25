@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "../../Combat/IParryable.h"
+#include "../../Combat/ILockOnTarget.h"
 
 class Player;
 class GroundPhysics;
@@ -16,7 +17,7 @@ class StateMachine;
 //===========================================================
 // クラスの役割
 //===========================================================
-class Enemy : public KdGameObject , public IParryable
+class Enemy : public KdGameObject , public IParryable , public ILockOnTarget
 {
 public:
 
@@ -40,6 +41,8 @@ public:
 
 	void SetPlayer(const std::shared_ptr<Player>& player){ m_wpPlayer = player; }
 	bool IsDead() const{ return m_parryDurability <= 0; }
+	bool CanLockOn() const override{ return !IsDead();}
+	Math::Vector3 GetLockOnPosition() const override;
 
 private:
 

@@ -1,61 +1,55 @@
 ﻿#pragma once
 
-#include "../CameraBase.h"
-#include "TPSCameraMode.h"
-
+class CameraManager;
 class ILockOnTarget;
-class TPSFreeLookMode;
-class TPSLockOnMode;
+class Player;
 
 //===========================================================
-// プレイヤーを追従する三人称カメラ
+// ロックオン入力と対象選択を担当する
 //===========================================================
-class TPSCamera : public CameraBase
+class LockOnController : public KdGameObject
 {
 public:
 
 	//===========================================================
 	// コンストラクタ・デストラクタ
 	//===========================================================
-	TPSCamera();
-	~TPSCamera()		override;
+	LockOnController()				= default;
+	~LockOnController()	override	= default;
 
 	//===========================================================
 	// 基本ライフサイクル
 	//===========================================================
-	void Init()			override;
-	void PostUpdate()	override;
+	void PreUpdate()	override;
 
 	//===========================================================
 	// 公開関数群
 	//===========================================================
-	void OnActivated()	override;
-
-	bool SetLockOnTarget(const std::shared_ptr<ILockOnTarget>& target);
-	void ClearLockOnTarget();
-	bool HasLockOnTarget() const;
-
-	std::shared_ptr<ILockOnTarget> GetLockOnTarget() const;
+	void SetCameraManager(const std::shared_ptr<CameraManager>& cameraManager)
+	{
+		m_wpCameraManager = cameraManager;
+	}
+	void SetPlayer(const std::shared_ptr<Player>& player)
+	{
+		m_wpPlayer = player;
+	}
 
 private:
 
 	//===========================================================
+	// 内部関数群
+	//===========================================================
+	// 画面内にいる最も近い対象を探す
+	std::shared_ptr<ILockOnTarget> FindClosestTargetOnScreen() const;
+
+	//===========================================================
 	// 所有・参照するオブジェクト
 	//===========================================================
-	std::unique_ptr<TPSFreeLookMode>	m_upFreeLookMode;
-	std::unique_ptr<TPSLockOnMode>		m_upLockOnMode;
+	std::weak_ptr<CameraManager>	m_wpCameraManager;
+	std::weak_ptr<Player>			m_wpPlayer;
 
 	//===========================================================
 	// 状態値
 	//===========================================================
-	Math::Vector3	m_focusPosition		= Math::Vector3::Zero;
-	TPSCameraModeId	m_mode				= TPSCameraModeId::FreeLook;
-
-	float			m_currentDistance	= 5.0f;
-	float			m_baseDistance		= 5.0f;
-	float			m_focusHeight		= 1.5f;
-	float			m_focusSharpness	= 10.0f;
-	float			m_distanceSharpness = 8.0f;
-
-	bool			m_hasCameraState	= false;
+	bool	m_wasLockOnKeyDown = false;
 };

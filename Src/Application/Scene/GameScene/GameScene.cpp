@@ -15,6 +15,8 @@
 #include "../../Time/HitStop.h"
 #include "../../GameObject/Effect/ParryEffect/ParryEffect.h"
 #include "../../GameObject/Effect/ScreenFlash/ScreenFlash.h"
+#include "../../GameObject/Camera/CameraManager.h"
+#include "../../GameObject/Camera/LockOnController/LockOnController.h"
 
 void GameScene::Event()
 {
@@ -24,7 +26,9 @@ void GameScene::Event()
 void GameScene::Init()
 {
 	// モデルの色が暗く潰れないように環境光を設定する
-	KdShaderManager::Instance().WorkAmbientController().SetAmbientLight(Math::Vector4(0.85f, 0.85f, 0.90f, 1.0f));
+	KdShaderManager::Instance().WorkAmbientController().SetAmbientLight(
+		Math::Vector4(0.85f, 0.85f, 0.90f, 1.0f)
+	);
 
 	//==========================================================
 	// ステージ生成
@@ -36,10 +40,13 @@ void GameScene::Init()
 	//==========================================================
 	// カメラ生成
 	//==========================================================
-	auto camera = std::make_shared<TPSCamera>();
+	auto cameraManager	= std::make_shared<CameraManager>();
+	auto camera			= std::make_shared<TPSCamera>();
 	camera->Init();
-	camera->StartShake(0.08f, 0.20f);
-	AddObject(camera);
+	cameraManager->RegisterCamera(
+		CameraManager::CameraType::ThirdPerson
+		,camera);
+	AddObject(cameraManager);
 
 	//==========================================================
 	// プレイヤー生成
@@ -68,6 +75,16 @@ void GameScene::Init()
 	playerController->SetPlayer(player);
 	playerController->SetCamera(camera);
 	AddObject(playerController);
+
+	//==========================================================
+	// ロックオンコントローラー生成
+	//==========================================================
+	auto lockOnController = std::make_shared<LockOnController>();
+
+	lockOnController->SetCameraManager(cameraManager);
+	lockOnController->SetPlayer(player);
+
+	AddObject(lockOnController);
 
 	//==========================================================
 	// カメラのターゲットをプレイヤーに設定
@@ -197,9 +214,9 @@ void GameScene::SetupParrySuccessEffect(
 			//==========================================================
 			ScreenFlashSettings flashSettings{};
 
-			flashSettings.color = { 0.35f, 0.85f, 1.0f };
-			flashSettings.peakOpacity = 0.12f;
-			flashSettings.fadeDuration = 0.10f;
+			flashSettings.color			= { 0.35f, 0.85f, 1.0f };
+			flashSettings.peakOpacity	= 0.12f;
+			flashSettings.fadeDuration	= 0.10f;
 
 			if (result == ParryResult::Defeated)
 			{

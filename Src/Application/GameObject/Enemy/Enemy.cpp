@@ -141,6 +141,21 @@ ParryResult Enemy::OnParried()
 }
 
 //===========================================================
+// カメラが狙う敵の胴体位置を取得する
+//===========================================================
+Math::Vector3 Enemy::GetLockOnPosition() const
+{
+	Math::Vector3 lockOnPosition = GetPos();
+
+	if (m_upConfig)
+	{
+		lockOnPosition.y += m_upConfig->lockOnHeight;
+	}
+
+	return lockOnPosition;
+}
+
+//===========================================================
 // プレイヤーとの距離に応じて移動する関数
 //===========================================================
 float Enemy::UpdateMove(

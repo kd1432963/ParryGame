@@ -130,6 +130,9 @@
     <Filter Include="Src\Application\GameObject\Effect\ScreenFlash">
       <UniqueIdentifier>{483321e1-02e6-4f76-b3a1-171602eb843d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\GameObject\Camera\LockOnController">
+      <UniqueIdentifier>{9b3359e0-a9d4-4036-b0d5-e9b76a87346d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -375,6 +378,24 @@
     <ClInclude Include="Src\Application\GameObject\Effect\ScreenFlash\ScreenFlash.h">
       <Filter>Src\Application\GameObject\Effect\ScreenFlash</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Camera\CameraManager.h">
+      <Filter>Src\Application\GameObject\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Camera\TPSCamera\TPSCameraMode.h">
+      <Filter>Src\Application\GameObject\Camera\TPSCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Camera\TPSCamera\TPSFreeLookMode.h">
+      <Filter>Src\Application\GameObject\Camera\TPSCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Combat\ILockOnTarget.h">
+      <Filter>Src\Application\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Camera\TPSCamera\TPSLockOnMode.h">
+      <Filter>Src\Application\GameObject\Camera\TPSCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Camera\LockOnController\LockOnController.h">
+      <Filter>Src\Application\GameObject\Camera\LockOnController</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -580,6 +601,18 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Effect\ScreenFlash\ScreenFlash.cpp">
       <Filter>Src\Application\GameObject\Effect\ScreenFlash</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Camera\CameraManager.cpp">
+      <Filter>Src\Application\GameObject\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Camera\TPSCamera\TPSFreeLookMode.cpp">
+      <Filter>Src\Application\GameObject\Camera\TPSCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Camera\TPSCamera\TPSLockOnMode.cpp">
+      <Filter>Src\Application\GameObject\Camera\TPSCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Camera\LockOnController\LockOnController.cpp">
+      <Filter>Src\Application\GameObject\Camera\LockOnController</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -138,25 +138,66 @@ void CameraBase::StartZoom(const CameraZoomSettings& settings)
 	m_upCameraZoom->Start(settings);
 }
 
+//============================================================
+// カメラ切り替え直後の準備
+//============================================================
+void CameraBase::OnActivated()
+{
+	// 切り替え中に動いたマウスを、次の回転入力として扱わない
+	ResetMouseInput();
+}
+
 //===========================================================
 // マウスでカメラを回転させる
 //===========================================================
 void CameraBase::UpdateRotateByMouse()
 {
-	// マウスでカメラを回転させる処理
-	POINT _nowPos;
-	GetCursorPos(&_nowPos);
+	const HWND windowHandle = Application::Instance().GetWindowHandle();
 
-	POINT _mouseMove{};
-	_mouseMove.x = _nowPos.x - m_FixMousePos.x;
-	_mouseMove.y = _nowPos.y - m_FixMousePos.y;
+	if (GetForegroundWindow() != windowHandle)
+	{
+		ResetMouseInput();
+		return;
+	}
 
-	SetCursorPos(m_FixMousePos.x, m_FixMousePos.y);
+	// クライアント領域の中央をスクリーン座標へ変換する
+	RECT clientRect{};
+	GetClientRect(windowHandle, &clientRect);
 
-	// 実際にカメラを回転させる処理(0.15はただの補正値)
-	m_DegAng.x += _mouseMove.y * 0.15f;
-	m_DegAng.y += _mouseMove.x * 0.15f;
+	POINT centerPos
+	{
+		(clientRect.right - clientRect.left) / 2,
+		(clientRect.bottom - clientRect.top) / 2
+	};
 
-	// 回転制御
-	m_DegAng.x = std::clamp(m_DegAng.x, -45.f, 45.f);
+	ClientToScreen(windowHandle, &centerPos);
+
+	// 中央からどれだけマウスが移動したか求める
+	POINT currentPos{};
+	GetCursorPos(&currentPos);
+
+	// 初回とロックオン解除直後は中央へ戻すだけにする
+	if (!m_isMouseInputReady)
+	{
+		SetCursorPos(centerPos.x, centerPos.y);
+		m_isMouseInputReady = true;
+		return;
+	}
+
+	const POINT mouseMove
+	{
+		currentPos.x - centerPos.x,
+		currentPos.y - centerPos.y
+	};
+
+	SetCursorPos(centerPos.x, centerPos.y);
+
+	// マウス移動量を角度へ変換する
+	constexpr float kMouseSensitivity = 0.15f;
+
+	m_DegAng.x += mouseMove.y * kMouseSensitivity;
+	m_DegAng.y += mouseMove.x * kMouseSensitivity;
+
+	// 真上・真下まで回り込まないように制限する
+	m_DegAng.x = std::clamp(m_DegAng.x, -45.0f, 45.0f);
 }

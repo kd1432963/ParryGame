@@ -32,6 +32,7 @@ public:
 	void StartShake(const CameraShakeSettings& settings);
 	void StartShake(float power, float time);
 	void StartZoom(const CameraZoomSettings& settings);
+	virtual void OnActivated();
 
 	// 「絶対変更しません！見るだけ！」な書き方
 	const std::shared_ptr<KdCamera>& GetCamera() const
@@ -70,6 +71,11 @@ protected:
 	// 内部関数群
 	//===========================================================
 	void UpdateRotateByMouse();
+	// ロックオン解除直後の大きなマウス移動を無視する
+	void ResetMouseInput()
+	{
+		m_isMouseInputReady = false;
+	}
 
 	//===========================================================
 	// 所有・参照するオブジェクト
@@ -83,9 +89,10 @@ protected:
 	//===========================================================
 	// 状態値
 	//===========================================================
-	Math::Vector3	m_DegAng	= Math::Vector3::Zero;
-	Math::Matrix	m_mLocalPos = Math::Matrix::Identity;
-	Math::Matrix	m_mRotation = Math::Matrix::Identity;
+	Math::Vector3	m_DegAng			= Math::Vector3::Zero;
+	Math::Matrix	m_mLocalPos			= Math::Matrix::Identity;
+	Math::Matrix	m_mRotation			= Math::Matrix::Identity;
+	bool			m_isMouseInputReady = false;
 
 	// カメラ回転用マウス座標の差分
 	POINT			m_FixMousePos{};

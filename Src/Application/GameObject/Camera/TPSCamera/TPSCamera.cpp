@@ -1,30 +1,118 @@
 ﻿#include "TPSCamera.h"
 
+#include "TPSFreeLookMode.h"
+#include "TPSLockOnMode.h"
+#include "../../../main.h"
+#include "../../../Combat/ILockOnTarget.h"
+
+//===========================================================
+// コンストラクタ・デストラクタ
+//===========================================================
+TPSCamera::TPSCamera()
+	: m_upFreeLookMode(std::make_unique<TPSFreeLookMode>()),
+	  m_upLockOnMode(std::make_unique<TPSLockOnMode>())
+{}
+TPSCamera::~TPSCamera() = default;
+
+//===========================================================
+// 初期化関数
+//===========================================================
 void TPSCamera::Init()
 {
 	// 親クラスの初期化呼び出し
 	CameraBase::Init();
 
-	// 注視点
-	m_mLocalPos = Math::Matrix::CreateTranslation(0, 1.5f, -5.0f);
-
-	SetCursorPos(m_FixMousePos.x, m_FixMousePos.y);
+	m_currentDistance = m_baseDistance;
+	m_mLocalPos = Math::Matrix::CreateTranslation(
+		10.0f,
+		0.0f,
+		-m_currentDistance
+	);
 }
 
+//===========================================================
+// 更新関数
+//===========================================================
 void TPSCamera::PostUpdate()
 {
-	// ターゲットの行列(有効な場合利用する)
-	Math::Matrix								_targetMat = Math::Matrix::Identity;
-	const std::shared_ptr<const KdGameObject>	_spTarget = m_wpTarget.lock();
-	if (_spTarget)
+	const auto _spTarget = m_wpTarget.lock();
+
+	if (!_spTarget) return;
+
+	const float unscaledDeltaTime =
+		Application::Instance().GetUnscaledDeltaTime();
+
+	Math::Vector3 desiredFocusPosition = _spTarget->GetPos();
+	desiredFocusPosition.y += m_focusHeight;
+
+	float	desiredDistance = m_baseDistance;
+	bool	isLockOnActive = false;
+
+	if (m_mode == TPSCameraModeId::LockOn &&
+		m_upLockOnMode)
 	{
-		_targetMat = Math::Matrix::CreateTranslation(_spTarget->GetPos());
+		isLockOnActive = m_upLockOnMode->Update(
+			_spTarget->GetPos(),
+			m_baseDistance,
+			m_focusHeight,
+			unscaledDeltaTime,
+			m_DegAng,
+			desiredFocusPosition,
+			desiredDistance
+		);
 	}
 
-	// カメラの回転
-	UpdateRotateByMouse();
+	// 対象が倒れた場合などは通常視点へ戻す
+	if (!isLockOnActive)
+	{
+		if (m_mode == TPSCameraModeId::LockOn)
+		{
+			ClearLockOnTarget();
+		}
+
+		if (m_upFreeLookMode)
+		{
+			m_upFreeLookMode->Update(m_DegAng);
+		}
+	}
+
+	// 初回だけ補間元を現在の目標値へ合わせる
+	if (!m_hasCameraState)
+	{
+		m_focusPosition = desiredFocusPosition;
+		m_currentDistance = desiredDistance;
+		m_hasCameraState = true;
+	}
+
+	const float focusRate = 1.0f - expf(
+		-m_focusSharpness * unscaledDeltaTime
+	);
+
+	const float distanceRate = 1.0f - expf(
+		-m_distanceSharpness * unscaledDeltaTime
+	);
+
+	m_focusPosition +=
+		(desiredFocusPosition - m_focusPosition) * focusRate;
+
+	m_currentDistance +=
+		(desiredDistance - m_currentDistance) * distanceRate;
+
 	m_mRotation = GetRotationMatrix();
-	m_mWorld = m_mLocalPos * m_mRotation * _targetMat;
+
+	m_mLocalPos = Math::Matrix::CreateTranslation(
+		0.0f,
+		0.0f,
+		-m_currentDistance
+	);
+
+	const Math::Matrix targetMatrix =
+		Math::Matrix::CreateTranslation(m_focusPosition);
+
+	m_mWorld =
+		m_mLocalPos *
+		m_mRotation *
+		targetMatrix;
 
 	// ↓めり込み防止の為の座標補正計算↓
 	// ①当たり判定(レイ判定)用の情報作成
@@ -39,8 +127,8 @@ void TPSCamera::PostUpdate()
 	if (_spTarget)
 	{
 		Math::Vector3 _targetPos = _spTarget->GetPos();
-		_targetPos.y += 0.1f;
-		rayInfo.m_dir = _targetPos - GetPos();
+		_targetPos.y	+= 0.1f;
+		rayInfo.m_dir	= _targetPos - GetPos();
 		rayInfo.m_range = rayInfo.m_dir.Length();
 		rayInfo.m_dir.Normalize();
 	}
@@ -82,4 +170,72 @@ void TPSCamera::PostUpdate()
 			}
 		}
 	}
+}
+
+//===========================================================
+// カメラ切り替え時の処理
+//===========================================================
+void TPSCamera::OnActivated()
+{
+	CameraBase::OnActivated();
+
+	if (!m_upFreeLookMode) return;
+
+	m_upFreeLookMode->ResetInput();
+}
+
+//===========================================================
+// ロックオン対象の設定・解除
+//===========================================================
+bool TPSCamera::SetLockOnTarget(const std::shared_ptr<ILockOnTarget>& target)
+{
+	if (!m_upLockOnMode ||
+		!m_upLockOnMode->SetTarget(target))
+	{
+		return false;
+	}
+
+	m_mode = TPSCameraModeId::LockOn;
+
+	if (m_upFreeLookMode)
+	{
+		m_upFreeLookMode->ResetInput();
+	}
+
+	return true;
+}
+
+//===========================================================
+// ロックオン対象の解除
+//===========================================================
+void TPSCamera::ClearLockOnTarget()
+{
+	if (m_upLockOnMode)
+	{
+		m_upLockOnMode->ClearTarget();
+	}
+
+	m_mode = TPSCameraModeId::FreeLook;
+
+	if (m_upFreeLookMode)
+	{
+		m_upFreeLookMode->ResetInput();
+	}
+}
+
+//===========================================================
+// ロックオン対象の有無を取得
+//===========================================================
+bool TPSCamera::HasLockOnTarget() const
+{
+	return m_mode == TPSCameraModeId::LockOn &&
+		m_upLockOnMode &&
+		m_upLockOnMode->HasTarget();
+}
+
+std::shared_ptr<ILockOnTarget> TPSCamera::GetLockOnTarget() const
+{
+	if (!m_upLockOnMode) return nullptr;
+
+	return m_upLockOnMode->GetTarget();
 }
