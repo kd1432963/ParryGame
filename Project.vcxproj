@@ -278,6 +278,7 @@
     <ClInclude Include="Src\Application\Combat\AttackInfo.h" />
     <ClInclude Include="Src\Application\Combat\ILockOnTarget.h" />
     <ClInclude Include="Src\Application\Combat\IParryable.h" />
+    <ClInclude Include="Src\Application\Combat\LockOn\LockOnTargetManager.h" />
     <ClInclude Include="Src\Application\Combat\ParrySystem.h" />
     <ClInclude Include="Src\Application\GameObject\Camera\CameraBase.h" />
     <ClInclude Include="Src\Application\GameObject\Camera\CameraManager.h" />
@@ -358,6 +359,7 @@
     <ClCompile Include="..\Library\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Src\Application\Animation\AnimationPlayer.cpp" />
     <ClCompile Include="Src\Application\Combat\AttackHitBox.cpp" />
+    <ClCompile Include="Src\Application\Combat\LockOn\LockOnTargetManager.cpp" />
     <ClCompile Include="Src\Application\Combat\ParrySystem.cpp" />
     <ClCompile Include="Src\Application\GameObject\Camera\CameraBase.cpp" />
     <ClCompile Include="Src\Application\GameObject\Camera\CameraManager.cpp" />

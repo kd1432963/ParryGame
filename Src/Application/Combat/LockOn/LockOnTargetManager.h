@@ -3,39 +3,31 @@
 class ILockOnTarget;
 
 //===========================================================
-// ロックオン中の注視点・距離・カメラ方向を計算する
+// 現在のロックオン対象を共有・管理するクラス
 //===========================================================
-class TPSLockOnMode
+class LockOnTargetManager
 {
 public:
 
 	//===========================================================
 	// コンストラクタ・デストラクタ
 	//===========================================================
-	TPSLockOnMode() = default;
-	~TPSLockOnMode() = default;
+	LockOnTargetManager()	= default;
+	~LockOnTargetManager()	= default;
 
 	//===========================================================
 	// 公開関数
 	//===========================================================
-	bool Update(
-		const std::shared_ptr<ILockOnTarget>&	target,
-		const Math::Vector3&					followPosition,
-		float									baseDistance,
-		float									focusHeight,
-		float									unscaledDeltaTime,
-		Math::Vector3&							cameraAngle,
-		Math::Vector3&							outFocusPosition,
-		float&									outDistance
-	) const;
+	bool SetTarget(const std::shared_ptr<ILockOnTarget>& target);
+	void ClearTarget();
+
+	bool HasTarget() const;
+	std::shared_ptr<ILockOnTarget> GetTarget() const;
 
 private:
 
 	//===========================================================
-	// 調整値
+	// 所有するロックオン対象
 	//===========================================================
-	float	m_maxDistance			= 8.0f;
-	float	m_distancePerSeparation = 0.35f;
-	float	m_focusBias				= 0.40f;
-	float	m_rotationSharpness		= 8.0f;
+	std::weak_ptr<ILockOnTarget> m_wpTarget;
 };

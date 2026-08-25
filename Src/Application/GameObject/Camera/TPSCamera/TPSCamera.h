@@ -4,6 +4,7 @@
 #include "TPSCameraMode.h"
 
 class ILockOnTarget;
+class LockOnTargetManager;
 class TPSFreeLookMode;
 class TPSLockOnMode;
 
@@ -35,6 +36,13 @@ public:
 	void ClearLockOnTarget();
 	bool HasLockOnTarget() const;
 
+	void SetLockOnTargetManager(
+		const std::shared_ptr<LockOnTargetManager>& targetManager
+	)
+	{
+		m_wpLockOnTargetManager = targetManager;
+	}
+
 	std::shared_ptr<ILockOnTarget> GetLockOnTarget() const;
 
 private:
@@ -42,8 +50,9 @@ private:
 	//===========================================================
 	// 所有・参照するオブジェクト
 	//===========================================================
-	std::unique_ptr<TPSFreeLookMode>	m_upFreeLookMode;
-	std::unique_ptr<TPSLockOnMode>		m_upLockOnMode;
+	std::unique_ptr<TPSFreeLookMode>	m_upFreeLookMode	= nullptr;
+	std::unique_ptr<TPSLockOnMode>		m_upLockOnMode		= nullptr;
+	std::weak_ptr<LockOnTargetManager>	m_wpLockOnTargetManager;
 
 	//===========================================================
 	// 状態値

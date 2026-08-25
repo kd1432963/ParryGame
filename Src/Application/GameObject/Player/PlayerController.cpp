@@ -2,6 +2,8 @@
 
 #include "../Player/Player.h"
 #include "../../GameObject/Camera/CameraBase.h"
+#include "../../Combat/ILockOnTarget.h"
+#include "../../Combat/LockOn/LockOnTargetManager.h"
 
 //===========================================================
 // コンストラクタ・デストラクタ
@@ -21,6 +23,7 @@ void PlayerController::PreUpdate()
 	}
 
 	UpdateMove();
+	UpdateFacing();
 	UpdateParry();
 }
 
@@ -34,6 +37,7 @@ void PlayerController::ClearInput()
 	if (!player) return;
 
 	player->SetMoveDirection(Math::Vector3::Zero);
+	player->SetFacingDirection(Math::Vector3::Zero);
 	player->SetDashInput(false);
 }
 
@@ -42,40 +46,113 @@ void PlayerController::ClearInput()
 //===========================================================
 void PlayerController::UpdateMove()
 {
-	auto player = m_wpPlayer.lock();
-	auto camera = m_wpCamera.lock();
+	const auto	player			= m_wpPlayer.lock();
+	const auto	camera			= m_wpCamera.lock();
+	const auto	targetManager	= m_wpLockOnTargetManager.lock();
 
 	if (!player || !camera) return;
 
-	Math::Vector3	moveDir = Math::Vector3::Zero;
+	Math::Vector3	moveDirection		= Math::Vector3::Zero;
+	Math::Vector3	moveForward			= Math::Vector3::Zero;
+	Math::Vector3	moveRight			= Math::Vector3::Zero;
+	bool			isLockOnMovement	= false;
 
-	// カメラの向きから前方向と右方向を取得
-	Math::Matrix	cameraMat		= camera->GetMatrix();
-	Math::Vector3	cameraForward	= cameraMat.Backward();
-	Math::Vector3	cameraRight		= cameraMat.Right();
+	if (targetManager)
+	{
+		const auto target = targetManager->GetTarget();
 
-	// 地面移動なのでYは不要
-	cameraForward.y = 0.0f;
-	cameraRight.y	= 0.0f;
+		if (target)
+		{
+			// ロック中はプレイヤーから敵への方向を前方向にする
+			moveForward = target->GetLockOnPosition() - player->GetPos();
+			moveForward.y = 0.0f;
 
-	// 正規化
-	cameraForward.Normalize();
-	cameraRight.Normalize();
+			if (moveForward.LengthSquared() > 0.0001f)
+			{
+				moveForward.Normalize();
 
-	// 入力
-	if (GetAsyncKeyState('W') & 0x8000) { moveDir += cameraForward; }
-	if (GetAsyncKeyState('S') & 0x8000) { moveDir -= cameraForward; }
-	if (GetAsyncKeyState('A') & 0x8000) { moveDir -= cameraRight; }
-	if (GetAsyncKeyState('D') & 0x8000) { moveDir += cameraRight; }
+				// 敵方向に対して直角となる右方向を作る
+				moveRight =
+				{
+					moveForward.z,
+					0.0f,
+					-moveForward.x
+				};
 
-	// 斜め移動対策
-	if (moveDir.LengthSquared() > 1.0f) { moveDir.Normalize(); }
+				isLockOnMovement = true;
+			}
+		}
+	}
+
+	// ロックしていない場合はカメラ基準で移動する
+	if (!isLockOnMovement)
+	{
+		const Math::Matrix cameraMatrix = camera->GetMatrix();
+
+		moveForward		= cameraMatrix.Backward();
+		moveRight		= cameraMatrix.Right();
+
+		moveForward.y	= 0.0f;
+		moveRight.y		= 0.0f;
+
+		moveForward.Normalize();
+		moveRight.Normalize();
+	}
+
+	if (GetAsyncKeyState('W') & 0x8000) { moveDirection += moveForward; }
+	if (GetAsyncKeyState('S') & 0x8000) { moveDirection -= moveForward; }
+	if (GetAsyncKeyState('A') & 0x8000) { moveDirection -= moveRight; }
+	if (GetAsyncKeyState('D') & 0x8000) { moveDirection += moveRight; }
+
+	// 斜め移動だけ速くなることを防ぐ
+	if (moveDirection.LengthSquared() > 1.0f)
+	{
+		moveDirection.Normalize();
+	}
 
 	const bool isDashPressed = (GetAsyncKeyState(VK_LSHIFT) & 0x8000) != 0;
 
-	// Player へ命令
-	player->SetMoveDirection(moveDir);
+	player->SetMoveDirection(moveDirection);
 	player->SetDashInput(isDashPressed);
+}
+
+//===========================================================
+// ロックオン中の向きを更新する
+//===========================================================
+void PlayerController::UpdateFacing()
+{
+	const auto player = m_wpPlayer.lock();
+
+	if (!player) return;
+
+	const auto targetManager = m_wpLockOnTargetManager.lock();
+
+	if (!targetManager)
+	{
+		player->SetFacingDirection(Math::Vector3::Zero);
+		return;
+	}
+
+	const auto target = targetManager->GetTarget();
+
+	if (!target)
+	{
+		player->SetFacingDirection(Math::Vector3::Zero);
+		return;
+	}
+
+	Math::Vector3 facingDirection = target->GetLockOnPosition() - player->GetPos();
+
+	facingDirection.y = 0.0f;
+
+	if (facingDirection.LengthSquared() <= 0.0001f)
+	{
+		player->SetFacingDirection(Math::Vector3::Zero);
+		return;
+	}
+
+	facingDirection.Normalize();
+	player->SetFacingDirection(facingDirection);
 }
 
 //===========================================================

@@ -2,9 +2,10 @@
 
 #include"../BaseScene/BaseScene.h"
 
+class CameraBase;
+class LockOnTargetManager;
 class Player;
-class BaseCamera;
-class ScreenFlash;;
+class ScreenFlash;
 
 class GameScene : public BaseScene
 {
@@ -29,4 +30,9 @@ private:
 		const std::shared_ptr<CameraBase>& camera,
 		const std::shared_ptr<ScreenFlash>& screenFlash
 	);
+
+	//===========================================================
+	// 所有する管理クラス
+	//===========================================================
+	std::shared_ptr<LockOnTargetManager> m_spLockOnTargetManager;
 };

@@ -139,6 +139,9 @@
     <Filter Include="Src\Application\GameObject\UI\LockOnMaker">
       <UniqueIdentifier>{99f36473-ceff-4b5f-9843-2dcf8e9afbb2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Combat\LockOn">
+      <UniqueIdentifier>{21e69394-7305-4f79-9802-edb40ce7b28d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -405,6 +408,9 @@
     <ClInclude Include="Src\Application\GameObject\UI\LockOnMarker\LockOnMarker.h">
       <Filter>Src\Application\GameObject\UI\LockOnMaker</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Combat\LockOn\LockOnTargetManager.h">
+      <Filter>Src\Application\Combat\LockOn</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -625,6 +631,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\UI\LockOnMarker\LockOnMarker.cpp">
       <Filter>Src\Application\GameObject\UI\LockOnMaker</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Combat\LockOn\LockOnTargetManager.cpp">
+      <Filter>Src\Application\Combat\LockOn</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

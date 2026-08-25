@@ -18,6 +18,7 @@
 #include "../../GameObject/Camera/CameraManager.h"
 #include "../../GameObject/Camera/LockOnController/LockOnController.h"
 #include "../../GameObject/UI/LockOnMarker/LockOnMarker.h"
+#include "../../Combat/LockOn/LockOnTargetManager.h"
 
 void GameScene::Event()
 {
@@ -32,6 +33,11 @@ void GameScene::Init()
 	);
 
 	//==========================================================
+	// ロックオン対象管理クラス生成
+	//==========================================================
+	m_spLockOnTargetManager = std::make_shared<LockOnTargetManager>();
+
+	//==========================================================
 	// ステージ生成
 	//==========================================================
 	auto arenaFloor = std::make_shared<ArenaFloor>();
@@ -41,8 +47,9 @@ void GameScene::Init()
 	//==========================================================
 	// カメラ生成
 	//==========================================================
-	auto cameraManager	= std::make_shared<CameraManager>();
-	auto camera			= std::make_shared<TPSCamera>();
+	auto cameraManager = std::make_shared<CameraManager>();
+	auto camera = std::make_shared<TPSCamera>();
+	camera->SetLockOnTargetManager(m_spLockOnTargetManager);
 	camera->Init();
 	cameraManager->RegisterCamera(
 		CameraManager::CameraType::ThirdPerson
@@ -75,6 +82,7 @@ void GameScene::Init()
 	auto playerController = std::make_shared<PlayerController>();
 	playerController->SetPlayer(player);
 	playerController->SetCamera(camera);
+	playerController->SetLockOnTargetManager(m_spLockOnTargetManager);
 	AddObject(playerController);
 
 	//==========================================================
@@ -82,6 +90,7 @@ void GameScene::Init()
 	//==========================================================
 	auto lockOnController = std::make_shared<LockOnController>();
 	lockOnController->SetCameraManager(cameraManager);
+	lockOnController->SetLockOnTargetManager(m_spLockOnTargetManager);
 	lockOnController->SetPlayer(player);
 	AddObject(lockOnController);
 

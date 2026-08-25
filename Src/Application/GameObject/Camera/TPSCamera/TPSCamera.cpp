@@ -4,6 +4,7 @@
 #include "TPSLockOnMode.h"
 #include "../../../main.h"
 #include "../../../Combat/ILockOnTarget.h"
+#include "../../../Combat/LockOn/LockOnTargetManager.h"
 
 //===========================================================
 // コンストラクタ・デストラクタ
@@ -24,7 +25,7 @@ void TPSCamera::Init()
 
 	m_currentDistance = m_baseDistance;
 	m_mLocalPos = Math::Matrix::CreateTranslation(
-		10.0f,
+		0.5f,
 		0.0f,
 		-m_currentDistance
 	);
@@ -39,8 +40,22 @@ void TPSCamera::PostUpdate()
 
 	if (!_spTarget) return;
 
-	const float unscaledDeltaTime =
-		Application::Instance().GetUnscaledDeltaTime();
+
+	const auto targetManager = m_wpLockOnTargetManager.lock();
+	const auto lockOnTarget = targetManager ? targetManager->GetTarget() : nullptr;
+
+	// Managerに対象が設定された瞬間にロックオンモードへ切り替える
+	if (lockOnTarget && m_mode != TPSCameraModeId::LockOn)
+	{
+		m_mode = TPSCameraModeId::LockOn;
+
+		if (m_upFreeLookMode)
+		{
+			m_upFreeLookMode->ResetInput();
+		}
+	}
+
+	const float unscaledDeltaTime =	Application::Instance().GetUnscaledDeltaTime();
 
 	Math::Vector3 desiredFocusPosition = _spTarget->GetPos();
 	desiredFocusPosition.y += m_focusHeight;
@@ -52,6 +67,7 @@ void TPSCamera::PostUpdate()
 		m_upLockOnMode)
 	{
 		isLockOnActive = m_upLockOnMode->Update(
+			lockOnTarget,
 			_spTarget->GetPos(),
 			m_baseDistance,
 			m_focusHeight,
@@ -101,7 +117,7 @@ void TPSCamera::PostUpdate()
 	m_mRotation = GetRotationMatrix();
 
 	m_mLocalPos = Math::Matrix::CreateTranslation(
-		0.0f,
+		0.5f,
 		0.0f,
 		-m_currentDistance
 	);
@@ -187,10 +203,17 @@ void TPSCamera::OnActivated()
 //===========================================================
 // ロックオン対象の設定・解除
 //===========================================================
-bool TPSCamera::SetLockOnTarget(const std::shared_ptr<ILockOnTarget>& target)
+//===========================================================
+// ロックオン対象を設定する
+//===========================================================
+bool TPSCamera::SetLockOnTarget(
+	const std::shared_ptr<ILockOnTarget>& target
+)
 {
-	if (!m_upLockOnMode ||
-		!m_upLockOnMode->SetTarget(target))
+	const auto targetManager = m_wpLockOnTargetManager.lock();
+
+	if (!targetManager ||
+		!targetManager->SetTarget(target))
 	{
 		return false;
 	}
@@ -206,13 +229,15 @@ bool TPSCamera::SetLockOnTarget(const std::shared_ptr<ILockOnTarget>& target)
 }
 
 //===========================================================
-// ロックオン対象の解除
+// ロックオン対象を解除する
 //===========================================================
 void TPSCamera::ClearLockOnTarget()
 {
-	if (m_upLockOnMode)
+	const auto targetManager = m_wpLockOnTargetManager.lock();
+
+	if (targetManager)
 	{
-		m_upLockOnMode->ClearTarget();
+		targetManager->ClearTarget();
 	}
 
 	m_mode = TPSCameraModeId::FreeLook;
@@ -224,18 +249,24 @@ void TPSCamera::ClearLockOnTarget()
 }
 
 //===========================================================
-// ロックオン対象の有無を取得
+// ロックオン対象が存在するか
 //===========================================================
 bool TPSCamera::HasLockOnTarget() const
 {
-	return m_mode == TPSCameraModeId::LockOn &&
-		m_upLockOnMode &&
-		m_upLockOnMode->HasTarget();
+	const auto targetManager = m_wpLockOnTargetManager.lock();
+
+	return targetManager &&
+		targetManager->HasTarget();
 }
 
-std::shared_ptr<ILockOnTarget> TPSCamera::GetLockOnTarget() const
+//===========================================================
+// 現在のロックオン対象を取得する
+//===========================================================
+std::shared_ptr<ILockOnTarget>TPSCamera::GetLockOnTarget() const
 {
-	if (!m_upLockOnMode) return nullptr;
+	const auto targetManager = m_wpLockOnTargetManager.lock();
 
-	return m_upLockOnMode->GetTarget();
+	if (!targetManager) return nullptr;
+
+	return targetManager->GetTarget();
 }

@@ -31,7 +31,7 @@ void Player::Init()
 		m_spModel = std::make_shared<KdModelWork>();
 		m_spModel->SetModelData(
 			KdAssets::Instance().m_modeldatas.GetData(
-				"Asset/Models/Player/Player.gltf")
+				"Asset/Models/Player/PlayerBlindEcho/PlayerBlindEcho.gltf")
 		);
 	}
 
@@ -203,25 +203,34 @@ void Player::TakeDamage(int damage)
 }
 
 //===========================================================
-// Yaw 更新関数
+// Yaw更新関数
 //===========================================================
 void Player::UpdateYaw(float deltaTime)
 {
-	// 移動していないときは向きを変えない
-	if (m_moveDir.LengthSquared() <= 0.0001f) return;
+	// 向く方向が指定されていない場合は移動方向を使用する
+	Math::Vector3 facingDirection = m_moveDir;
 
-	// 移動方向から目標 Yaw を求める
-	const float		targetYaw = atan2f(m_moveDir.x, m_moveDir.z);
+	if (m_facingDirection.LengthSquared() > 0.0001f)
+	{
+		facingDirection = m_facingDirection;
+	}
 
-	// 現在の Yaw から目標 Yaw までの角度差を求め、最短経路（-π ～ +π）に正規化
-	const float		angleDiff = DirectX::XMScalarModAngle(targetYaw - m_yaw);
+	if (facingDirection.LengthSquared() <= 0.0001f) return;
 
-	// 1秒間に回転できる最大角度（例えば 360.0f度）
-	constexpr float turnSpeed = DirectX::XMConvertToRadians(360.0f);
+	// 向く方向から目標Yawを求める
+	const float targetYaw = atan2f(
+		-facingDirection.x,
+		-facingDirection.z
+	);
+
+	// 現在角度から目標角度までの最短角度差を求める
+	const float angleDifference = DirectX::XMScalarModAngle(targetYaw - m_yaw);
+
+	// 1フレームで回転できる最大角度
+	constexpr float	turnSpeed = DirectX::XMConvertToRadians(360.0f);
 	const float		maxRotate = turnSpeed * deltaTime;
 
-	// std::clamp で1フレームの回転量を制限し、現在の Yaw に加算
-	m_yaw += std::clamp(angleDiff, -maxRotate, maxRotate);
+	m_yaw += std::clamp(angleDifference, -maxRotate, maxRotate);
 }
 
 //===========================================================
@@ -243,18 +252,68 @@ void Player::PlayLocomotionAnimation()
 {
 	if (!m_upAnimationPlayer || !m_spModel) return;
 
-	const bool	isMoving				= m_moveDir.LengthSquared() > 0.01f;
-	std::string	animationName			= "PlayerBlindEcho_Idle";
+	const bool	isMoving = m_moveDir.LengthSquared() > 0.0001f;
+	const bool	isLockOn = m_facingDirection.LengthSquared() > 0.0001f;
+
+	std::string	animationName = "PlayerBlindEcho_Idle";
 	float		animationReferenceSpeed = 1.0f;
 
+	// 通常時は前進またはダッシュを再生する
 	if (isMoving)
 	{
-		animationName			= "PlayerBlindEcho_Run";
-		animationReferenceSpeed = kRunAnimationReferenceSpeed;
+		animationName = m_isDashing ?
+			"PlayerBlindEcho_Dash" :
+			"PlayerBlindEcho_Walk";
+
+		animationReferenceSpeed = m_isDashing ?
+			kDashAnimationReferenceSpeed :
+			kWalkAnimationReferenceSpeed;
 	}
 
-	const float	moveSpeed		= m_isDashing ? kDashSpeed : kWalkSpeed;
-	const float	playbackSpeed	= isMoving ? moveSpeed / animationReferenceSpeed : 1.0f;
+	// ロックオン中は敵を向いたまま、移動方向に合うモーションを選ぶ
+	if (isMoving && isLockOn)
+	{
+		Math::Vector3 facingDirection = m_facingDirection;
+		facingDirection.Normalize();
+
+		// 敵方向を前、その直角方向を右とする
+		const Math::Vector3 rightDirection =
+		{
+			facingDirection.z,
+			0.0f,
+			-facingDirection.x
+		};
+
+		const float	forwardAmount = m_moveDir.Dot(facingDirection);
+		const float	rightAmount = m_moveDir.Dot(rightDirection);
+
+		const float	absoluteForward = fabsf(forwardAmount);
+		const float	absoluteRight = fabsf(rightAmount);
+
+		// 45度付近でWalkとStrafeが交互に切り替わることを防ぐ
+		constexpr float kDirectionSelectionBias = 0.15f;
+
+		if (absoluteRight > absoluteForward + kDirectionSelectionBias)
+		{
+			animationName = rightAmount > 0.0f ?
+				"PlayerBlindEcho_StrafeRight" :
+				"PlayerBlindEcho_StrafeLeft";
+
+			animationReferenceSpeed =
+				kStrafeAnimationReferenceSpeed;
+		}
+		else if (forwardAmount < -kDirectionSelectionBias)
+		{
+			animationName =
+				"PlayerBlindEcho_RunBackward";
+
+			animationReferenceSpeed =
+				kBackwardAnimationReferenceSpeed;
+		}
+	}
+
+	const float	moveSpeed = m_isDashing ? kDashSpeed : kWalkSpeed;
+	const float	playbackSpeed = isMoving ? moveSpeed / animationReferenceSpeed : 1.0f;
 
 	m_upAnimationPlayer->Play(
 		*m_spModel,
@@ -264,6 +323,5 @@ void Player::PlayLocomotionAnimation()
 		kLocomotionBlendTime
 	);
 
-	// 座標の移動速度を変えても、足運びが同じ割合で追従する
 	m_upAnimationPlayer->SetAnimationSpeed(playbackSpeed);
 }

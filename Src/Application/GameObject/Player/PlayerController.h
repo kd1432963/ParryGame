@@ -1,7 +1,8 @@
 ﻿#pragma once
 
-class Player;
 class CameraBase;
+class LockOnTargetManager;
+class Player;
 
 //===========================================================
 // プレイヤーの入力を受け取り、プレイヤーとカメラに命令するクラス
@@ -26,6 +27,12 @@ public:
 	//===========================================================
 	void SetPlayer(const std::shared_ptr<Player>& player)		{ m_wpPlayer = player; }
 	void SetCamera(const std::shared_ptr<CameraBase>& camera)	{ m_wpCamera = camera; }
+	void SetLockOnTargetManager(
+		const std::shared_ptr<LockOnTargetManager>& targetManager
+	)
+	{
+		m_wpLockOnTargetManager = targetManager;
+	}
 
 private:
 
@@ -33,14 +40,16 @@ private:
 	// 内部関数
 	//===========================================================
 	void UpdateMove();
+	void UpdateFacing();
 	void UpdateParry();
 	void ClearInput();
 
 	//===========================================================
 	// 所有・参照するオブジェクト
 	//===========================================================
-	std::weak_ptr<Player>		m_wpPlayer;
-	std::weak_ptr<CameraBase>	m_wpCamera;
+	std::weak_ptr<Player>				m_wpPlayer;
+	std::weak_ptr<CameraBase>			m_wpCamera;
+	std::weak_ptr<LockOnTargetManager>	m_wpLockOnTargetManager;
 
 	//===========================================================
 	// 状態値
