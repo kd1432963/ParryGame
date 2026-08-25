@@ -78,57 +78,40 @@ void GameScene::Init()
 	AddObject(player);
 
 	//==========================================================
-	// 敵生成
+	// 近接型の敵生成
 	//==========================================================
-	auto enemy = std::make_shared<Enemy>(EnemyType::ResonanceCaster);
-	enemy->Init();
-	enemy->SetPlayer(player);
-	m_spCharacterSeparation->RegisterBody(
-		enemy,
-		enemy->GetBodyRadius(),
-		enemy->GetBodyHeight()
-	);
-	AddObject(enemy);
+	auto golem = std::make_shared<Enemy>(EnemyType::Golem);
+	golem->Init();
+	golem->SetPos({ -2.5f, 0.0f, 6.0f });
+	golem->SetPlayer(player);
 
-	enemy = std::make_shared<Enemy>(EnemyType::Golem);
-	enemy->Init();
-	enemy->SetPlayer(player);
 	m_spCharacterSeparation->RegisterBody(
-		enemy,
-		enemy->GetBodyRadius(),
-		enemy->GetBodyHeight()
+		golem,
+		golem->GetBodyRadius(),
+		golem->GetBodyHeight()
 	);
-	AddObject(enemy);
 
-	enemy = std::make_shared<Enemy>(EnemyType::Golem);
-	enemy->Init();
-	enemy->SetPlayer(player);
-	m_spCharacterSeparation->RegisterBody(
-		enemy,
-		enemy->GetBodyRadius(),
-		enemy->GetBodyHeight()
-	);
-	AddObject(enemy);
+	AddObject(golem);
 
-	enemy = std::make_shared<Enemy>(EnemyType::Golem);
-	enemy->Init();
-	enemy->SetPlayer(player);
-	m_spCharacterSeparation->RegisterBody(
-		enemy,
-		enemy->GetBodyRadius(),
-		enemy->GetBodyHeight()
+	//==========================================================
+	// 遠距離型の敵生成
+	//==========================================================
+	auto resonanceCaster = std::make_shared<Enemy>(
+		EnemyType::ResonanceCaster
 	);
-	AddObject(enemy);
 
-	enemy = std::make_shared<Enemy>(EnemyType::Golem);
-	enemy->Init();
-	enemy->SetPlayer(player);
+	resonanceCaster->Init();
+	resonanceCaster->SetPos({ 3.5f, 0.0f, 8.0f });
+	resonanceCaster->SetPlayer(player);
+
 	m_spCharacterSeparation->RegisterBody(
-		enemy,
-		enemy->GetBodyRadius(),
-		enemy->GetBodyHeight()
+		resonanceCaster,
+		resonanceCaster->GetBodyRadius(),
+		resonanceCaster->GetBodyHeight()
 	);
-	AddObject(enemy);
+
+	AddObject(resonanceCaster);
+
 
 	//==========================================================
 	// プレイヤーコントローラー生成

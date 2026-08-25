@@ -35,7 +35,7 @@ namespace
 		config.lockOnHeight				= 1.2f;
 		config.walkAnimationCycleTime	= 0.52f;
 		config.deathAnimationTime		= 1.50f;
-		config.maxParryDurability		= 30;
+		config.maxParryDurability		= 3;
 		config.attackWarningColor		= { 1.0f, 0.55f, 0.10f };
 
 		return config;
