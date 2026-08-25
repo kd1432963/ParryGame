@@ -20,7 +20,7 @@ namespace
 		config.attackSteps[1]	= { 1.30f, 0.8f / 1.5f };
 		config.attackSteps[2]	= { 1.30f, 0.8f / 1.5f };
 
-		config.modelScale			= 2.2f;
+		config.modelScale			= 2.5f;
 		config.moveSpeed			= 2.0f;
 		config.minAttackRange		= 0.0f;
 		config.maxAttackRange		= 2.0f;
@@ -57,7 +57,7 @@ namespace
 		config.attackStepCount			= 1;
 		config.attackSteps[0]			= { 1.20f, 0.55f };
 
-		config.modelScale				= 1.5f;
+		config.modelScale				= 1.25f;
 		config.moveSpeed				= 3.2f;
 		config.minAttackRange			= 4.5f;
 		config.maxAttackRange			= 7.5f;

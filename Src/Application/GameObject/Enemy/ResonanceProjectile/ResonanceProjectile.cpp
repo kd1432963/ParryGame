@@ -140,8 +140,7 @@ bool ResonanceProjectile::TryHitPlayer()
 				}
 			);
 
-			attackInfo.hitPos =
-				bestResult->m_hitPos;
+			attackInfo.hitPos = bestResult->m_hitPos;
 		}
 
 		player->OnHit(attackInfo);

@@ -7,6 +7,10 @@
 #include "../../GameObject/Camera/TPSCamera/TPSCamera.h"
 #include "../../GameObject/Enemy/Enemy.h"
 #include "../../GameObject/Enemy/EnemyConfig.h"
+#include "../../GameObject/Camera/CameraShake/CameraShake.h"
+#include "../../GameObject/Camera/CameraZoom/CameraZoom.h"
+#include "../../GameObject/Camera/CameraBase.h"
+#include "../../Combat/IParryable.h"
 
 void GameScene::Event()
 {
@@ -30,6 +34,7 @@ void GameScene::Init()
 	//==========================================================
 	auto camera = std::make_shared<TPSCamera>();
 	camera->Init();
+	camera->StartShake(0.08f, 0.20f);
 	AddObject(camera);
 
 	//==========================================================
@@ -64,6 +69,11 @@ void GameScene::Init()
 	// カメラのターゲットをプレイヤーに設定
 	//==========================================================
 	camera->SetTarget(player);
+
+	//==========================================================
+	// パリィ成功時のエフェクト
+	//==========================================================
+	SetupParrySuccessEffect(player, camera);
 }
 
 //==========================================================
@@ -78,4 +88,60 @@ void GameScene::DebugUpdate()
 			SceneManager::SceneType::Title
 		);
 	}
+}
+
+//==========================================================
+// パリィ成功時のエフェクト
+//==========================================================
+void GameScene::SetupParrySuccessEffect(
+	const std::shared_ptr<Player>&		player,
+	const std::shared_ptr<CameraBase>&	camera
+)
+{
+	const std::weak_ptr<CameraBase> wpCamera = camera;
+
+	player->SetParrySuccessCallback(
+		[wpCamera](
+			const Math::Vector3&					hitPos,
+			ParryResult								result,
+			const std::shared_ptr<KdGameObject>&	parriedObj
+			)
+		{
+			const auto camera = wpCamera.lock();
+
+			if (!camera) return;
+
+			//==========================================================
+			// カメラ揺れの設定
+			//==========================================================
+			CameraShakeSettings shakeSettings{};
+
+			shakeSettings.durationSeconds		= 0.22f;
+			shakeSettings.samplesPerSecond		= 40.0f;
+			shakeSettings.maxPositionOffset		= Math::Vector3(0.55f, 0.55f, 0.0f);
+			shakeSettings.maxRotationDegrees	= Math::Vector3(0.80f, 0.60f, 1.40f);
+
+			// 敵を倒したパリィは強く揺らす
+			if (result == ParryResult::Defeated)
+			{
+				shakeSettings.durationSeconds		= 0.55f;
+				shakeSettings.maxPositionOffset		= Math::Vector3(0.48f, 0.34f, 0.30f);
+				shakeSettings.maxRotationDegrees	= Math::Vector3(1.20f, 0.85f, 1.60f);
+			}
+
+			camera->StartShake(shakeSettings);
+
+			//==========================================================
+			// カメラズームの設定
+			//==========================================================
+			CameraZoomSettings zoomSettings{};
+
+			zoomSettings.targetFieldOfView	= 48.0f;
+			zoomSettings.zoomInDuration		= 0.045f;
+			zoomSettings.holdDuration		= 0.06f;
+			zoomSettings.zoomOutDuration	= 0.28f;
+
+			camera->StartZoom(zoomSettings);
+		}
+	);
 }

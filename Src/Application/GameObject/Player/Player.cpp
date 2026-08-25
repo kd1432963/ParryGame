@@ -131,6 +131,17 @@ void Player::OnHit(const AttackInfo& info)
 
 		const ParryResult parryResult = parryable->OnParried();
 
+		// パリィ発生地点・結果・パリィされた敵を通知する
+		if (m_parrySuccessCallback)
+		{
+			m_parrySuccessCallback(
+				info.hitPos,
+				parryResult,
+				attacker
+			);
+		}
+
+
 		// 成功時は即座に通常状態へ戻して、
 		// 次のパリィ入力を受け付けられるようにする
 		m_upStateMachine->ChangeState(PlayerStateId::Normal);
@@ -143,6 +154,8 @@ void Player::OnHit(const AttackInfo& info)
 	TakeDamage(info.damage);
 
 	if (m_hp >= hpBeforeDamage)return;
+
+	if (IsDead())return;
 
 	// ノックバック方向を計算する
 	m_damageDirection = Math::Vector3::Zero;

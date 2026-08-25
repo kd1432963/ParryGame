@@ -2,6 +2,9 @@
 
 #include"../BaseScene/BaseScene.h"
 
+class Player;
+class BaseCamera;
+
 class GameScene : public BaseScene
 {
 public :
@@ -14,4 +17,9 @@ private:
 	void Event()		override;
 	void Init()			override;
 	void DebugUpdate()	override;
+
+	void SetupParrySuccessEffect(
+		const std::shared_ptr<Player>&		player,
+		const std::shared_ptr<CameraBase>&	camera
+	);
 };

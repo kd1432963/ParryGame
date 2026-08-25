@@ -112,6 +112,12 @@
     <Filter Include="Src\Application\GameObject\Enemy\ResonanceProjectile">
       <UniqueIdentifier>{2a850f18-fa8e-47a7-b58f-6a9742502368}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\GameObject\Camera\CameraShake">
+      <UniqueIdentifier>{01682a73-f5af-4ad1-aa90-742eac464c1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Camera\CameraZoom">
+      <UniqueIdentifier>{8768d9fa-5a0d-482c-a2b0-f7e5be2db7ba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -342,6 +348,12 @@
     <ClInclude Include="Src\Application\GameObject\Enemy\ResonanceProjectile\ResonanceProjectile.h">
       <Filter>Src\Application\GameObject\Enemy\ResonanceProjectile</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Camera\CameraShake\CameraShake.h">
+      <Filter>Src\Application\GameObject\Camera\CameraShake</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Camera\CameraZoom\CameraZoom.h">
+      <Filter>Src\Application\GameObject\Camera\CameraZoom</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -532,6 +544,12 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Enemy\ResonanceProjectile\ResonanceProjectile.cpp">
       <Filter>Src\Application\GameObject\Enemy\ResonanceProjectile</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Camera\CameraShake\CameraShake.cpp">
+      <Filter>Src\Application\GameObject\Camera\CameraShake</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Camera\CameraZoom\CameraZoom.cpp">
+      <Filter>Src\Application\GameObject\Camera\CameraZoom</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

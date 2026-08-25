@@ -8,6 +8,7 @@ template<class TStateId>
 class StateMachine;
 
 enum class PlayerStateId;
+enum class ParryResult;
 
 struct AttackInfo;
 
@@ -39,6 +40,17 @@ public:
 	void RequestParry();
 	void OnHit(const AttackInfo& info);
 	bool IsDead() const { return m_hp <= 0; }
+
+	// パリィ成功時に実行する演出通知を設定する
+	void SetParrySuccessCallback(
+		std::function<void(
+			const Math::Vector3&,
+			ParryResult,
+			const std::shared_ptr<KdGameObject>&)> callback
+	)
+	{
+		m_parrySuccessCallback = std::move(callback);
+	}
 
 private:
 
@@ -77,6 +89,10 @@ private:
 	std::unique_ptr<ParrySystem>				m_upParrySystem		= nullptr;
 	std::unique_ptr<GroundPhysics>				m_upGroundPhysics	= nullptr;
 	std::shared_ptr<KdModelWork>				m_spModel			= nullptr;
+
+	std::function<void(const Math::Vector3&, 
+		ParryResult,
+		const std::shared_ptr<KdGameObject>&)>	m_parrySuccessCallback;
 
 	//===========================================================
 	// 状態値
