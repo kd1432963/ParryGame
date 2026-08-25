@@ -17,6 +17,7 @@
 #include "../../GameObject/Effect/ScreenFlash/ScreenFlash.h"
 #include "../../GameObject/Camera/CameraManager.h"
 #include "../../GameObject/Camera/LockOnController/LockOnController.h"
+#include "../../GameObject/UI/LockOnMarker/LockOnMarker.h"
 
 void GameScene::Event()
 {
@@ -80,11 +81,16 @@ void GameScene::Init()
 	// ロックオンコントローラー生成
 	//==========================================================
 	auto lockOnController = std::make_shared<LockOnController>();
-
 	lockOnController->SetCameraManager(cameraManager);
 	lockOnController->SetPlayer(player);
-
 	AddObject(lockOnController);
+
+	//==========================================================
+	// ロックオンマーカー生成
+	//==========================================================
+	auto lockOnMarker = std::make_shared<LockOnMarker>();
+	lockOnMarker->SetCameraManager(cameraManager);
+	AddObject(lockOnMarker);
 
 	//==========================================================
 	// カメラのターゲットをプレイヤーに設定
@@ -147,6 +153,24 @@ void GameScene::SetupParrySuccessEffect(
 			const auto screenFlash = wpScreenFlash.lock();
 			if (!screenFlash) return;
 
+			// 敵を倒しているかどうか
+			const bool didParryDefeatEnemy = result == ParryResult::Defeated;
+
+			//==========================================================
+			// 敵が死んでいなければ
+			//==========================================================
+			if (!didParryDefeatEnemy)
+			{
+				// パリィした敵をロックオン対象にする
+				const auto tpsCamera	= std::dynamic_pointer_cast<TPSCamera>(camera);
+				const auto lockOnTarget = std::dynamic_pointer_cast<ILockOnTarget>(parriedObj);
+
+				if (tpsCamera && lockOnTarget)
+				{
+					tpsCamera->SetLockOnTarget(lockOnTarget);
+				}
+			}
+
 			//==========================================================
 			// カメラ揺れの設定
 			//==========================================================
@@ -158,7 +182,7 @@ void GameScene::SetupParrySuccessEffect(
 			shakeSettings.maxRotationDegrees	= Math::Vector3(0.5f, 0.5f, 0.5f);
 
 			// 敵を倒したパリィは強く揺らす
-			if (result == ParryResult::Defeated)
+			if (didParryDefeatEnemy)
 			{
 				shakeSettings.durationSeconds		= 0.45f;
 				shakeSettings.maxPositionOffset		= Math::Vector3(0.48f, 0.34f, 0.30f);
@@ -178,7 +202,7 @@ void GameScene::SetupParrySuccessEffect(
 			zoomSettings.zoomOutDuration	= 0.28f;
 
 			// 敵を倒したズームは強くズームする
-			if (result == ParryResult::Defeated)
+			if (didParryDefeatEnemy)
 			{
 				zoomSettings.targetFieldOfView	= 45.0f;
 				zoomSettings.zoomInDuration		= 0.05f;
@@ -191,11 +215,11 @@ void GameScene::SetupParrySuccessEffect(
 			//==========================================================
 			// ヒットストップの設定
 			//==========================================================
-			float hitStopDuration = 0.22f;
-			float hitStopTimeScale = 0.2f;
+			float hitStopDuration	= 0.22f;
+			float hitStopTimeScale	= 0.2f;
 
 			// 敵を倒したズームは長くヒットストップする
-			if (result == ParryResult::Defeated)
+			if (didParryDefeatEnemy)
 			{
 				hitStopDuration		= 0.32f;
 				hitStopTimeScale	= 0.2f;
@@ -218,7 +242,7 @@ void GameScene::SetupParrySuccessEffect(
 			flashSettings.peakOpacity	= 0.12f;
 			flashSettings.fadeDuration	= 0.10f;
 
-			if (result == ParryResult::Defeated)
+			if (didParryDefeatEnemy)
 			{
 				flashSettings.color			= { 1.0f, 0.75f, 0.20f };
 				flashSettings.peakOpacity	= 0.20f;

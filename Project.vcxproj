@@ -300,6 +300,7 @@
     <ClInclude Include="Src\Application\GameObject\Player\PlayerController.h" />
     <ClInclude Include="Src\Application\GameObject\Player\PlayerState.h" />
     <ClInclude Include="Src\Application\GameObject\Stage\ArenaFloor.h" />
+    <ClInclude Include="Src\Application\GameObject\UI\LockOnMarker\LockOnMarker.h" />
     <ClInclude Include="Src\Application\main.h" />
     <ClInclude Include="Src\Application\Scene\BaseScene\BaseScene.h" />
     <ClInclude Include="Src\Application\Scene\GameScene\GameScene.h" />
@@ -378,6 +379,7 @@
     <ClCompile Include="Src\Application\GameObject\Player\PlayerController.cpp" />
     <ClCompile Include="Src\Application\GameObject\Player\PlayerState.cpp" />
     <ClCompile Include="Src\Application\GameObject\Stage\ArenaFloor.cpp" />
+    <ClCompile Include="Src\Application\GameObject\UI\LockOnMarker\LockOnMarker.cpp" />
     <ClCompile Include="Src\Application\main.cpp" />
     <ClCompile Include="Src\Application\Scene\BaseScene\BaseScene.cpp" />
     <ClCompile Include="Src\Application\Scene\GameScene\GameScene.cpp" />
