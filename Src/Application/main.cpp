@@ -81,6 +81,9 @@ void Application::KdBeginUpdate()
 // ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// /////
 void Application::KdPostUpdate()
 {
+	// パーティクルの位置・寿命・アニメーションを1フレーム進める
+	KdEffekseerManager::GetInstance().Update();
+
 	// 3DSoundListnerの行列を更新
 	KdAudioManager::Instance().SetListnerMatrix(KdShaderManager::Instance().GetCameraCB().mView.Invert());
 }
@@ -148,6 +151,8 @@ void Application::PreDraw()
 void Application::Draw()
 {
 	SceneManager::Instance().Draw();
+
+	KdEffekseerManager::GetInstance().Draw();
 }
 
 // ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// /////
@@ -232,6 +237,11 @@ bool Application::Init(int w, int h)
 	// シェーダー初期化
 	//===================================================================
 	KdShaderManager::Instance().Init();
+
+	//===================================================================
+	// パーティクルエフェクトの描画機能と管理領域を作成する
+	//===================================================================
+	KdEffekseerManager::GetInstance().Create(w, h);
 
 	//===================================================================
 	// オーディオ初期化

@@ -13,6 +13,7 @@
 #include "../../GameObject/Camera/CameraBase.h"
 #include "../../Combat/IParryable.h"
 #include "../../Time/HitStop.h"
+#include "../../GameObject/Effect/ParryEffect/ParryEffect.h"
 
 void GameScene::Event()
 {
@@ -162,17 +163,23 @@ void GameScene::SetupParrySuccessEffect(
 			//==========================================================
 			// ヒットストップの設定
 			//==========================================================
-			float hitStopDuration = 0.08f;
-			float hitStopTimeScale = 0.0f;
+			float hitStopDuration = 0.22f;
+			float hitStopTimeScale = 0.2f;
 
 			// 敵を倒したズームは長くヒットストップする
 			if (result == ParryResult::Defeated)
 			{
-				hitStopDuration		= 0.1f;
+				hitStopDuration		= 0.32f;
 				hitStopTimeScale	= 0.2f;
 			}
 
 			Application::Instance().StartHitStop(hitStopDuration, hitStopTimeScale);
+
+			//==========================================================
+			// パリィエフェクトの生成
+			//==========================================================
+			auto parryEffect = std::make_shared<ParryEffect>();
+			parryEffect->Play(hitPos);
 		}
 	);
 }

@@ -121,6 +121,12 @@
     <Filter Include="Src\Application\Time">
       <UniqueIdentifier>{4450a0b5-cfb9-4600-8fd4-0b6000ef8972}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\GameObject\Effect">
+      <UniqueIdentifier>{8047a629-7568-4d26-947f-9f66ece5da86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\GameObject\Effect\ParryEffect">
+      <UniqueIdentifier>{9966fa08-45db-4f11-a790-4783b973fa6d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -360,6 +366,9 @@
     <ClInclude Include="Src\Application\Time\HitStop.h">
       <Filter>Src\Application\Time</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Effect\ParryEffect\ParryEffect.h">
+      <Filter>Src\Application\GameObject\Effect\ParryEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -559,6 +568,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Time\HitStop.cpp">
       <Filter>Src\Application\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Effect\ParryEffect\ParryEffect.cpp">
+      <Filter>Src\Application\GameObject\Effect\ParryEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

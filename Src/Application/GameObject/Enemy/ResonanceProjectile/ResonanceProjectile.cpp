@@ -74,11 +74,6 @@ void ResonanceProjectile::Update()
 
 	const float deltaTime = Application::Instance().GetDeltaTime();
 
-	if (deltaTime <= 0.0f) return;
-
-	// 発射時に決めた方向へ直線移動する
-	m_position += m_direction * m_speed * deltaTime;
-
 	// 弾の現在位置へポイントライトを毎フレーム登録する
 	KdShaderManager::Instance()
 		.WorkAmbientController()
@@ -87,6 +82,11 @@ void ResonanceProjectile::Update()
 			kProjectileLightRadius,
 			m_position
 		);
+
+	if (deltaTime <= 0.0f) return;
+
+	// 発射時に決めた方向へ直線移動する
+	m_position += m_direction * m_speed * deltaTime;
 
 	m_lifeTime = std::max(0.0f, m_lifeTime - deltaTime);
 

@@ -25,6 +25,10 @@ void CameraBase::Init()
 	// ↓画面中央座標
 	m_FixMousePos.x = 640;
 	m_FixMousePos.y = 360;
+
+	KdEffekseerManager::GetInstance().SetCamera(
+		this->GetCamera()
+	);
 }
 
 //===========================================================
