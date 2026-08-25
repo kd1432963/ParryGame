@@ -2,6 +2,16 @@
 
 #include "Scene/SceneManager.h"
 
+#include "Time/HitStop.h"
+
+// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// /////
+// コンストラクタ　デストラクタ
+// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// /////
+Application::Application() :
+	m_upHitStop(std::make_unique<HitStop>())
+{}
+Application::~Application() = default;
+
 // ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// /////
 // エントリーポイント
 // アプリケーションはこの関数から進行する
@@ -23,7 +33,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_  HINSTANCE, _In_ LPSTR , _In_ int)
 	setlocale(LC_ALL, "japanese");
 
 	//===================================================================
-	// 実行]
+	// 実行
 	//===================================================================
 	Application::Instance().Execute();
 
@@ -34,10 +44,31 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_  HINSTANCE, _In_ LPSTR , _In_ int)
 }
 
 // ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// /////
+// 
+// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// /////
+float Application::GetUnscaledDeltaTime() const
+{
+	return m_fpsController.GetDeltaTime();
+}
+
+float Application::GetDeltaTime() const
+{
+	return GetUnscaledDeltaTime() * m_upHitStop->GetTimeScale();
+}
+
+void Application::StartHitStop(float durationSeconds, float timeScale)
+{
+	m_upHitStop->Start(durationSeconds, timeScale);
+}
+
+// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// /////
 // アプリケーション更新開始
 // ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// ///// /////
 void Application::KdBeginUpdate()
 {
+	// ヒットストップ自体は、止められていない実時間で更新する
+	m_upHitStop->Update(GetUnscaledDeltaTime());
+
 	// 入力状況の更新
 	KdInputManager::Instance().Update();
 
@@ -346,3 +377,5 @@ void Application::Release()
 	// ウィンドウ削除
 	m_window.Release();
 }
+
+

@@ -1,6 +1,7 @@
 ﻿#include "GameScene.h"
 
 #include "../SceneManager.h"
+#include "../../main.h"
 #include "../../GameObject/Player/Player.h"
 #include "../../GameObject/Player/PlayerController.h"
 #include "../../GameObject/Stage/ArenaFloor.h"
@@ -11,6 +12,7 @@
 #include "../../GameObject/Camera/CameraZoom/CameraZoom.h"
 #include "../../GameObject/Camera/CameraBase.h"
 #include "../../Combat/IParryable.h"
+#include "../../Time/HitStop.h"
 
 void GameScene::Event()
 {
@@ -74,6 +76,11 @@ void GameScene::Init()
 	// パリィ成功時のエフェクト
 	//==========================================================
 	SetupParrySuccessEffect(player, camera);
+
+	//==========================================================
+	// ダメージ時のエフェクト
+	//==========================================================
+	SetupDamageEffect(player, camera);
 }
 
 //==========================================================
@@ -118,13 +125,13 @@ void GameScene::SetupParrySuccessEffect(
 
 			shakeSettings.durationSeconds		= 0.22f;
 			shakeSettings.samplesPerSecond		= 40.0f;
-			shakeSettings.maxPositionOffset		= Math::Vector3(0.55f, 0.55f, 0.0f);
-			shakeSettings.maxRotationDegrees	= Math::Vector3(0.80f, 0.60f, 1.40f);
+			shakeSettings.maxPositionOffset		= Math::Vector3(0.1f, 0.1f, 0.0f);
+			shakeSettings.maxRotationDegrees	= Math::Vector3(0.5f, 0.5f, 0.5f);
 
 			// 敵を倒したパリィは強く揺らす
 			if (result == ParryResult::Defeated)
 			{
-				shakeSettings.durationSeconds		= 0.55f;
+				shakeSettings.durationSeconds		= 0.45f;
 				shakeSettings.maxPositionOffset		= Math::Vector3(0.48f, 0.34f, 0.30f);
 				shakeSettings.maxRotationDegrees	= Math::Vector3(1.20f, 0.85f, 1.60f);
 			}
@@ -136,12 +143,48 @@ void GameScene::SetupParrySuccessEffect(
 			//==========================================================
 			CameraZoomSettings zoomSettings{};
 
-			zoomSettings.targetFieldOfView	= 48.0f;
+			zoomSettings.targetFieldOfView	= 50.0f;
 			zoomSettings.zoomInDuration		= 0.045f;
 			zoomSettings.holdDuration		= 0.06f;
 			zoomSettings.zoomOutDuration	= 0.28f;
 
+			// 敵を倒したズームは強くズームする
+			if (result == ParryResult::Defeated)
+			{
+				zoomSettings.targetFieldOfView	= 45.0f;
+				zoomSettings.zoomInDuration		= 0.05f;
+				zoomSettings.holdDuration		= 0.06f;
+				zoomSettings.zoomOutDuration	= 0.28f;
+			}
+
 			camera->StartZoom(zoomSettings);
+
+			//==========================================================
+			// ヒットストップの設定
+			//==========================================================
+			float hitStopDuration = 0.08f;
+			float hitStopTimeScale = 0.0f;
+
+			// 敵を倒したズームは長くヒットストップする
+			if (result == ParryResult::Defeated)
+			{
+				hitStopDuration		= 0.1f;
+				hitStopTimeScale	= 0.2f;
+			}
+
+			Application::Instance().StartHitStop(hitStopDuration, hitStopTimeScale);
 		}
 	);
+}
+
+//==========================================================
+// ダメージ時のエフェクト
+//==========================================================
+void GameScene::SetupDamageEffect(
+	const std::shared_ptr<Player>&		player, 
+	const std::shared_ptr<CameraBase>&	camera)
+{
+	const std::weak_ptr<CameraBase> wpCamera = camera;
+
+	
 }

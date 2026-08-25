@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+class HitStop;
+
 //============================================================
 // アプリケーションクラス
 //	APP.～ でどこからでもアクセス可能
@@ -20,7 +22,14 @@ public:
 
 	int		GetNowFPS()			const	{ return m_fpsController.m_nowfps; }
 	int		GetMaxFPS()			const	{ return m_fpsController.m_maxFps; }
-	float	GetDeltaTime()		const	{ return m_fpsController.GetDeltaTime(); }
+
+	// ヒットストップの影響を受けない実時間
+	float GetUnscaledDeltaTime() const;
+	// ゲームオブジェクトの更新に使用する時間
+	float GetDeltaTime() const;
+	// 指定時間だけゲーム速度を変更する
+	void StartHitStop(float durationSeconds, float timeScale);
+
 private:
 
 	void KdBeginUpdate();
@@ -43,20 +52,24 @@ private:
 	void Release();
 
 	// ゲームウィンドウクラス
-	KdWindow		m_window;
+	KdWindow					m_window;
 
 	// FPSコントローラー
-	KdFPSController	m_fpsController;
+	KdFPSController				m_fpsController;
 
 	// ゲーム終了フラグ trueで終了する
-	bool		m_endFlag = false;
+	bool						m_endFlag	= false;
+
+	// ヒットストップ
+	std::unique_ptr<HitStop>	m_upHitStop = nullptr;
 
 //=====================================================
 // シングルトンパターン
 //=====================================================
 private:
-	// 
-	Application() {}
+	 
+	Application();
+	~Application();
 
 public:
 	static Application &Instance(){

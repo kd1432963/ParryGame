@@ -32,7 +32,7 @@ void CameraBase::Init()
 //===========================================================
 void CameraBase::Update()
 {
-	const float deltaTime = Application::Instance().GetDeltaTime();
+	const float deltaTime = Application::Instance().GetUnscaledDeltaTime();
 
 #ifdef _DEBUG
 	// F6を押した瞬間にテストシェイク

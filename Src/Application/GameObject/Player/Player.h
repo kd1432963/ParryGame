@@ -52,6 +52,14 @@ public:
 		m_parrySuccessCallback = std::move(callback);
 	}
 
+	// 通常ダメージを受けたときに実行する演出通知を設定する
+	void SetDamageHitCallback(
+		std::function<void(const Math::Vector3&)> callback
+	)
+	{
+		m_damageHitCallback = std::move(callback);
+	}
+
 private:
 
 	//===========================================================
@@ -93,6 +101,7 @@ private:
 	std::function<void(const Math::Vector3&, 
 		ParryResult,
 		const std::shared_ptr<KdGameObject>&)>	m_parrySuccessCallback;
+	std::function<void(const Math::Vector3&)>	m_damageHitCallback;
 
 	//===========================================================
 	// 状態値

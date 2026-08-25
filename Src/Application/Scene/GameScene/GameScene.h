@@ -22,4 +22,8 @@ private:
 		const std::shared_ptr<Player>&		player,
 		const std::shared_ptr<CameraBase>&	camera
 	);
+	void SetupDamageEffect(
+		const std::shared_ptr<Player>& player,
+		const std::shared_ptr<CameraBase>& camera
+	);
 };

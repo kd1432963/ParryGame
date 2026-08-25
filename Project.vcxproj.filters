@@ -118,6 +118,9 @@
     <Filter Include="Src\Application\GameObject\Camera\CameraZoom">
       <UniqueIdentifier>{8768d9fa-5a0d-482c-a2b0-f7e5be2db7ba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Time">
+      <UniqueIdentifier>{4450a0b5-cfb9-4600-8fd4-0b6000ef8972}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -354,6 +357,9 @@
     <ClInclude Include="Src\Application\GameObject\Camera\CameraZoom\CameraZoom.h">
       <Filter>Src\Application\GameObject\Camera\CameraZoom</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Time\HitStop.h">
+      <Filter>Src\Application\Time</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -550,6 +556,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Camera\CameraZoom\CameraZoom.cpp">
       <Filter>Src\Application\GameObject\Camera\CameraZoom</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Time\HitStop.cpp">
+      <Filter>Src\Application\Time</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
