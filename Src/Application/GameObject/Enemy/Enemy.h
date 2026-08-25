@@ -46,6 +46,8 @@ public:
 	Math::Vector3 GetLockOnMarkerPosition()	const override;
 	int GetCurrentParryDurability()			const override;
 	int GetMaxParryDurability()				const override;
+	float GetBodyRadius()					const;
+	float GetBodyHeight()					const;
 
 private:
 
@@ -124,7 +126,7 @@ private:
 	float			m_currentAttackHitDelay	= 0.0f;
 	float			m_attackTimer			= 0.0f;
 	float			m_attackHitTimer		= 0.0f;
-	bool			m_isAttacking			= false;
+	bool			m_hasCreatedAttack		= false;
 	float			m_stunTimer				= 0.0f;
 	float			m_parryScaleTimer		= 0.0f;
 	float			m_parryColorTimer		= 0.0f;

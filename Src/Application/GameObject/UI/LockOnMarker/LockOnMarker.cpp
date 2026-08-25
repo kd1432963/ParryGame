@@ -20,7 +20,7 @@ namespace
 	constexpr int	kDurabilityTotalWidth	= 129;
 	constexpr int	kDurabilityHalfHeight	= 7;
 	constexpr int	kDurabilityFrameSize	= 3;
-	constexpr int	kDurabilityTopMargin	= 40;
+	constexpr int	kDurabilityTopMargin	= 20;
 
 	// ロックオンマーカーの角を描画する
 	void DrawLockOnCorners(

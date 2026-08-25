@@ -296,6 +296,7 @@
     <ClInclude Include="Src\Application\GameObject\Enemy\EnemyConfig.h" />
     <ClInclude Include="Src\Application\GameObject\Enemy\EnemyState.h" />
     <ClInclude Include="Src\Application\GameObject\Enemy\ResonanceProjectile\ResonanceProjectile.h" />
+    <ClInclude Include="Src\Application\GameObject\Physics\CharacterSeparation.h" />
     <ClInclude Include="Src\Application\GameObject\Physics\GroundPhysics.h" />
     <ClInclude Include="Src\Application\GameObject\Player\Player.h" />
     <ClInclude Include="Src\Application\GameObject\Player\PlayerController.h" />
@@ -376,6 +377,7 @@
     <ClCompile Include="Src\Application\GameObject\Enemy\EnemyConfig.cpp" />
     <ClCompile Include="Src\Application\GameObject\Enemy\EnemyState.cpp" />
     <ClCompile Include="Src\Application\GameObject\Enemy\ResonanceProjectile\ResonanceProjectile.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Physics\CharacterSeparation.cpp" />
     <ClCompile Include="Src\Application\GameObject\Physics\GroundPhysics.cpp" />
     <ClCompile Include="Src\Application\GameObject\Player\Player.cpp" />
     <ClCompile Include="Src\Application\GameObject\Player\PlayerController.cpp" />

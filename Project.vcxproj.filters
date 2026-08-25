@@ -411,6 +411,9 @@
     <ClInclude Include="Src\Application\Combat\LockOn\LockOnTargetManager.h">
       <Filter>Src\Application\Combat\LockOn</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Physics\CharacterSeparation.h">
+      <Filter>Src\Application\Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -634,6 +637,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Combat\LockOn\LockOnTargetManager.cpp">
       <Filter>Src\Application\Combat\LockOn</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Physics\CharacterSeparation.cpp">
+      <Filter>Src\Application\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

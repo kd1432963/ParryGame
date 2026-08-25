@@ -17,9 +17,9 @@ namespace
 
 		config.attackType		= EnemyAttackType::MeleeCombo;
 		config.attackStepCount	= 3;
-		config.attackSteps[0]	= { 1.50f, 0.8f / 1.5f };
-		config.attackSteps[1]	= { 1.30f, 0.8f / 1.5f };
-		config.attackSteps[2]	= { 1.30f, 0.8f / 1.5f };
+		config.attackSteps[0] = { 1.50f, 0.8f / 1.5f, 0.70f };
+		config.attackSteps[1] = { 1.30f, 0.8f / 1.5f, 0.70f };
+		config.attackSteps[2] = { 1.10f, 0.8f / 1.5f, 0.70f };
 
 		config.modelScale			= 2.5f;
 		config.moveSpeed			= 2.0f;

@@ -129,7 +129,7 @@ ParryResult Enemy::OnParried()
 
 	// 近接型だけは連撃の途中で止めず、次のパリィ機会を作る
 	if (m_upConfig->attackType == EnemyAttackType::MeleeCombo &&
-		m_comboAttackIndex < m_upConfig->attackStepCount)
+		m_comboAttackIndex + 1 < m_upConfig->attackStepCount)
 	{
 		return ParryResult::ContinueCombo;
 	}
@@ -200,6 +200,26 @@ int Enemy::GetMaxParryDurability() const
 	if (!m_upConfig) return 0;
 
 	return m_upConfig->maxParryDurability;
+}
+
+//===========================================================
+// 押し戻し判定に使用する体の半径を取得する
+//===========================================================
+float Enemy::GetBodyRadius() const
+{
+	if (!m_upConfig) return 0.0f;
+
+	return m_upConfig->bodyRadius;
+}
+
+//===========================================================
+// 押し戻し判定に使用する体の高さを取得する
+//===========================================================
+float Enemy::GetBodyHeight() const
+{
+	if (!m_upConfig) return 0.0f;
+
+	return m_upConfig->bodyHeight;
 }
 
 //===========================================================
@@ -330,7 +350,7 @@ void Enemy::StartComboAttack()
 	);
 
 	// 攻撃中フラグを立てる
-	m_isAttacking		= true;
+	m_hasCreatedAttack	= false;
 	m_attackTimer		= duration;
 	m_attackHitTimer	= 0.0f;
 }

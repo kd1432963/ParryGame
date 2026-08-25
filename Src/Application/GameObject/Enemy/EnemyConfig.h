@@ -18,11 +18,12 @@ enum class EnemyAttackType
 	ResonanceProjectile
 };
 
-// 1回の攻撃モーションと、判定を発生させる時刻
+// 1回の攻撃モーションと、判定を発生させる時刻、次の攻撃モーションへ移る時刻をまとめる
 struct EnemyAttackStepConfig
 {
-	float	durationSeconds = 1.0f;
-	float	hitTimingRate	= 0.5f;
+	float	durationSeconds			= 1.0f;
+	float	hitTimingRate			= 0.5f;
+	float	nextAttackTimingRate	= 0.8f;
 };
 
 //===========================================================

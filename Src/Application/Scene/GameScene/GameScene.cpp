@@ -19,6 +19,7 @@
 #include "../../GameObject/Camera/LockOnController/LockOnController.h"
 #include "../../GameObject/UI/LockOnMarker/LockOnMarker.h"
 #include "../../Combat/LockOn/LockOnTargetManager.h"
+#include "../../GameObject/Physics/CharacterSeparation.h"
 
 void GameScene::Event()
 {
@@ -36,6 +37,14 @@ void GameScene::Init()
 	// ロックオン対象管理クラス生成
 	//==========================================================
 	m_spLockOnTargetManager = std::make_shared<LockOnTargetManager>();
+
+	//==========================================================
+	// キャラクター押し戻し管理クラス生成
+	//==========================================================
+	m_spCharacterSeparation = std::make_shared<CharacterSeparation>();
+
+	// カメラより先に PostUpdate して、補正後の座標を追従させる
+	AddObject(m_spCharacterSeparation);
 
 	//==========================================================
 	// ステージ生成
@@ -61,6 +70,11 @@ void GameScene::Init()
 	//==========================================================
 	auto player = std::make_shared<Player>();
 	player->Init();
+	m_spCharacterSeparation->RegisterBody(
+		player,
+		player->GetBodyRadius(),
+		player->GetBodyHeight()
+	);
 	AddObject(player);
 
 	//==========================================================
@@ -69,11 +83,51 @@ void GameScene::Init()
 	auto enemy = std::make_shared<Enemy>(EnemyType::ResonanceCaster);
 	enemy->Init();
 	enemy->SetPlayer(player);
+	m_spCharacterSeparation->RegisterBody(
+		enemy,
+		enemy->GetBodyRadius(),
+		enemy->GetBodyHeight()
+	);
 	AddObject(enemy);
 
 	enemy = std::make_shared<Enemy>(EnemyType::Golem);
 	enemy->Init();
 	enemy->SetPlayer(player);
+	m_spCharacterSeparation->RegisterBody(
+		enemy,
+		enemy->GetBodyRadius(),
+		enemy->GetBodyHeight()
+	);
+	AddObject(enemy);
+
+	enemy = std::make_shared<Enemy>(EnemyType::Golem);
+	enemy->Init();
+	enemy->SetPlayer(player);
+	m_spCharacterSeparation->RegisterBody(
+		enemy,
+		enemy->GetBodyRadius(),
+		enemy->GetBodyHeight()
+	);
+	AddObject(enemy);
+
+	enemy = std::make_shared<Enemy>(EnemyType::Golem);
+	enemy->Init();
+	enemy->SetPlayer(player);
+	m_spCharacterSeparation->RegisterBody(
+		enemy,
+		enemy->GetBodyRadius(),
+		enemy->GetBodyHeight()
+	);
+	AddObject(enemy);
+
+	enemy = std::make_shared<Enemy>(EnemyType::Golem);
+	enemy->Init();
+	enemy->SetPlayer(player);
+	m_spCharacterSeparation->RegisterBody(
+		enemy,
+		enemy->GetBodyRadius(),
+		enemy->GetBodyHeight()
+	);
 	AddObject(enemy);
 
 	//==========================================================

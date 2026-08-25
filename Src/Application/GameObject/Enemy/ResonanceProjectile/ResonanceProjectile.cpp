@@ -92,8 +92,8 @@ void ResonanceProjectile::Update()
 
 	m_elapsedTime += deltaTime;
 
-	// Player へ命中、または寿命切れなら削除する
-	if (TryHitPlayer() || m_lifeTime <= 0.0f)
+	// Playerか発射元以外のEnemyへ命中、または寿命切れなら削除する
+	if (TryHitPlayer() || TryHitEnemy() || m_lifeTime <= 0.0f)
 	{
 		m_isExpired = true;
 	}
@@ -146,6 +146,39 @@ bool ResonanceProjectile::TryHitPlayer()
 		player->OnHit(attackInfo);
 
 		return true;
+	}
+
+	return false;
+}
+
+//===========================================================
+// Enemyとの命中判定
+//===========================================================
+bool ResonanceProjectile::TryHitEnemy()
+{
+	const auto owner = m_wpOwner.lock();
+
+	for (const auto& object : SceneManager::Instance().GetObjList())
+	{
+		const auto enemy = std::dynamic_pointer_cast<Enemy>(object);
+
+		// 発射した本人には当てず、生存中の別Enemyだけを調べる
+		if (!enemy || enemy == owner || enemy->IsDead()) continue;
+
+		const Math::Vector3 enemyPosition	= enemy->GetPos();
+		const float enemyBottom				= enemyPosition.y;
+		const float enemyTop					= enemyBottom + enemy->GetBodyHeight();
+
+		// 弾の球がEnemyの体の高さに届いていなければ対象外
+		if (m_position.y + m_hitRadius < enemyBottom ||
+			m_position.y - m_hitRadius > enemyTop) continue;
+
+		Math::Vector3 toEnemy = m_position - enemyPosition;
+		toEnemy.y = 0.0f;
+
+		const float hitDistance = m_hitRadius + enemy->GetBodyRadius();
+
+		if (toEnemy.LengthSquared() <= hitDistance * hitDistance) return true;
 	}
 
 	return false;

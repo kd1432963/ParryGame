@@ -6,6 +6,7 @@ class CameraBase;
 class LockOnTargetManager;
 class Player;
 class ScreenFlash;
+class CharacterSeparation;
 
 class GameScene : public BaseScene
 {
@@ -35,4 +36,5 @@ private:
 	// 所有する管理クラス
 	//===========================================================
 	std::shared_ptr<LockOnTargetManager> m_spLockOnTargetManager;
+	std::shared_ptr<CharacterSeparation> m_spCharacterSeparation;
 };

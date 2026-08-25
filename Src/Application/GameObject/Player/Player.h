@@ -41,6 +41,8 @@ public:
 	void RequestParry();
 	void OnHit(const AttackInfo& info);
 	bool IsDead() const { return m_hp <= 0; }
+	float GetBodyRadius() const { return kBodyRadius; }
+	float GetBodyHeight() const { return kBodyHeight; }
 
 	// パリィ成功時に実行する演出通知を設定する
 	void SetParrySuccessCallback(

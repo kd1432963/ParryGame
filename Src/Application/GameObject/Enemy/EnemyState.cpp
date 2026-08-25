@@ -164,38 +164,44 @@ void Enemy::UpdateAttack(float deltaTime)
 {
 	const auto player = m_wpPlayer.lock();
 
-	if (!player)return;
-	//if (!player || player->IsDead()) return;
+	if (!player || player->IsDead()) return;
 
 	UpdateDirection(player);
 
 	m_attackTimer = std::max(0.0f, m_attackTimer - deltaTime);
-
 	m_attackHitTimer += deltaTime;
 
-	if (m_attackHitTimer < m_currentAttackHitDelay)
+	// 設定時刻を越えた瞬間に、攻撃判定を一度だけ生成する
+	if (!m_hasCreatedAttack &&
+		m_attackHitTimer >= m_currentAttackHitDelay)
 	{
-		return;
+		CreateAttack();
+		m_hasCreatedAttack = true;
+
+		const bool hasNextAttack =
+			m_comboAttackIndex + 1 <
+			m_upConfig->attackStepCount;
+
+		// 最後の一撃後は、残りのモーションをRecoveryで再生する
+		if (!hasNextAttack)
+		{
+			m_upStateMachine->ChangeState(EnemyStateId::Recovery);
+			return;
+		}
 	}
 
-	CreateAttack();
+	// 攻撃モーションの次の攻撃タイミングを過ぎたら、次の攻撃へ移行する
+	const EnemyAttackStepConfig& stepConfig = m_upConfig->attackSteps[m_comboAttackIndex];
+	const float nextAttackTime				= stepConfig.durationSeconds * stepConfig.nextAttackTimingRate;
+	if (!m_hasCreatedAttack || m_attackHitTimer < nextAttackTime) return;
 
 	++m_comboAttackIndex;
-
-	// まだ次の攻撃がある
-	if (m_comboAttackIndex < m_upConfig->attackStepCount)
-	{
-		StartComboAttack();
-		return;
-	}
-
-	// コンボなし、コンボ終了で終了
-	m_upStateMachine->ChangeState(EnemyStateId::Recovery);
+	StartComboAttack();
 }
 
 void Enemy::ExitAttack()
 {
-	m_isAttacking		= false;
+	m_hasCreatedAttack = false;
 	m_attackHitTimer	= 0.0f;
 }
 
@@ -206,8 +212,7 @@ void Enemy::UpdateRecovery(float deltaTime)
 {
 	const auto player = m_wpPlayer.lock();
 
-	if (!player)return;
-	//if (!player || player->IsDead()) return;
+	if (!player || player->IsDead()) return;
 
 	// 攻撃後の隙では移動せず、Player方向だけを向く
 	UpdateDirection(player);
@@ -233,16 +238,16 @@ void Enemy::EnterStun()
 	);
 
 	// 攻撃途中でも確実に中断する
-	m_isAttacking = false;
-	m_attackTimer = 0.0f;
-	m_attackHitTimer = 0.0f;
+	m_hasCreatedAttack	= false;
+	m_attackTimer		= 0.0f;
+	m_attackHitTimer	= 0.0f;
 
-	m_stunTimer = kParryStunTime;
-	m_parryScaleTimer = kParryScaleTime;
-	m_parryColorTimer = kParryColorTime;
+	m_stunTimer			= kParryStunTime;
+	m_parryScaleTimer	= kParryScaleTime;
+	m_parryColorTimer	= kParryColorTime;
 	m_knockbackVelocity = Math::Vector3::Zero;
 
-	const auto player = m_wpPlayer.lock();
+	const auto player	= m_wpPlayer.lock();
 
 	if (!player) return;
 
@@ -322,7 +327,7 @@ void Enemy::EnterDead()
 	);
 
 	// 撃破時の値をリセットする
-	m_isAttacking		= false;
+	m_hasCreatedAttack	= false;
 	m_attackTimer		= 0.0f;
 	m_attackHitTimer	= 0.0f;
 	m_stunTimer			= 0.0f;
