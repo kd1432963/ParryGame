@@ -17,5 +17,7 @@ public:
 	IParryable()			= default;
 	virtual ~IParryable()	= default;
 
-	virtual ParryResult OnParried() = 0;
+	virtual ParryResult OnParried()						= 0;
+	virtual int GetCurrentParryDurability()		const	= 0;
+	virtual int GetMaxParryDurability()			const	= 0;
 };

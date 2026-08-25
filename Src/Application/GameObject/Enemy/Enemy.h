@@ -42,7 +42,10 @@ public:
 	void SetPlayer(const std::shared_ptr<Player>& player){ m_wpPlayer = player; }
 	bool IsDead() const{ return m_parryDurability <= 0; }
 	bool CanLockOn() const override{ return !IsDead();}
-	Math::Vector3 GetLockOnPosition() const override;
+	Math::Vector3 GetLockOnPosition()		const override;
+	Math::Vector3 GetLockOnMarkerPosition()	const override;
+	int GetCurrentParryDurability()			const override;
+	int GetMaxParryDurability()				const override;
 
 private:
 

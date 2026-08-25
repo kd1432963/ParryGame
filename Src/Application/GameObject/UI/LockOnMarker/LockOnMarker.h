@@ -48,8 +48,10 @@ private:
 	//===========================================================
 	// 状態値
 	//===========================================================
-	Math::Vector2	m_screenPosition	= Math::Vector2::Zero;
-	float			m_appearRate		= 0.0f;
-	float			m_visibleTime		= 0.0f;
-	bool			m_isVisible			= false;
+	Math::Vector2	m_screenPosition			= Math::Vector2::Zero;
+	float			m_appearRate				= 0.0f;
+	float			m_visibleTime				= 0.0f;
+	bool			m_isVisible					= false;
+	int				m_currentParryDurability	= 0;
+	int				m_maxParryDurability		= 0;
 };

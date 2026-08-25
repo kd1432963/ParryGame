@@ -156,6 +156,53 @@ Math::Vector3 Enemy::GetLockOnPosition() const
 }
 
 //===========================================================
+// 胸ボーンの現在位置をロックオンマーカーへ渡す
+//===========================================================
+Math::Vector3 Enemy::GetLockOnMarkerPosition() const
+{
+	if (m_spModel &&
+		m_upConfig &&
+		!m_upConfig->lockOnNodeName.empty())
+	{
+		// アニメーション後の全ボーン座標を必要な場合だけ計算する
+		if (m_spModel->NeedCalcNodeMatrices())
+		{
+			m_spModel->CalcNodeMatrices();
+		}
+
+		const auto* lockOnNode = m_spModel->FindNode(m_upConfig->lockOnNodeName);
+
+		if (lockOnNode)
+		{
+			const Math::Matrix lockOnWorld = lockOnNode->m_worldTransform * m_mWorld;
+
+			return lockOnWorld.Translation();
+		}
+	}
+
+	// ボーンが存在しないモデルでは従来の固定位置を使う
+	return GetLockOnPosition();
+}
+
+//===========================================================
+// 現在のパリィ耐久値を取得する
+//===========================================================
+int Enemy::GetCurrentParryDurability() const
+{
+	return m_parryDurability;
+}
+
+//===========================================================
+// パリィ耐久値の最大値を取得する
+//===========================================================
+int Enemy::GetMaxParryDurability() const
+{
+	if (!m_upConfig) return 0;
+
+	return m_upConfig->maxParryDurability;
+}
+
+//===========================================================
 // プレイヤーとの距離に応じて移動する関数
 //===========================================================
 float Enemy::UpdateMove(

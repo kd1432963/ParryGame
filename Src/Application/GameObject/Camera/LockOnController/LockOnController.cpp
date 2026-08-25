@@ -89,7 +89,7 @@ LockOnController::FindTargetsOnScreen() const
 
 	for (const auto& object : SceneManager::Instance().GetObjList())
 	{
-		// ILockOnTargetを実装したオブジェクトだけを候補にする
+		// ILockOnTarget を実装したオブジェクトだけを候補にする
 		const auto target = std::dynamic_pointer_cast<ILockOnTarget>(object);
 
 		if (!target || !target->CanLockOn()) continue;

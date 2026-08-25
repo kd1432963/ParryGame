@@ -21,4 +21,10 @@ public:
 
 	// カメラが狙う位置を返す
 	virtual Math::Vector3 GetLockOnPosition() const = 0;
+	// ロックオンマーカーを表示する位置を返す
+	// 個別指定がなければ、カメラの注視位置と同じ場所を使う
+	virtual Math::Vector3 GetLockOnMarkerPosition() const
+	{
+		return GetLockOnPosition();
+	}
 };

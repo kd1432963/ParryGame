@@ -37,6 +37,7 @@ struct EnemyConfig
 	std::string hitAnimationName	= ""; // 被弾アニメーション名
 	std::string deathAnimationName	= ""; // 死亡アニメーション名
 	std::string attackNodeName		= ""; // 攻撃判定を発生させるノード名
+	std::string lockOnNodeName		= ""; // ロックオンマーカーを表示するノード名
 
 	EnemyAttackType							attackType = EnemyAttackType::MeleeCombo;	// 攻撃判定の作り方
 	std::array<EnemyAttackStepConfig, 3>	attackSteps{};								// 攻撃モーションのステップごとの設定

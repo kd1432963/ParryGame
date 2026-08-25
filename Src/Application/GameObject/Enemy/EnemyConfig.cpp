@@ -13,6 +13,7 @@ namespace
 		config.hitAnimationName		= "EnemyGolem_Hit";
 		config.deathAnimationName	= "EnemyGolem_Death";
 		config.attackNodeName		= "mixamorig:RightHand";
+		config.lockOnNodeName		= "mixamorig:Spine2";
 
 		config.attackType		= EnemyAttackType::MeleeCombo;
 		config.attackStepCount	= 3;
@@ -34,7 +35,7 @@ namespace
 		config.lockOnHeight				= 1.2f;
 		config.walkAnimationCycleTime	= 0.52f;
 		config.deathAnimationTime		= 1.50f;
-		config.maxParryDurability		= 3;
+		config.maxParryDurability		= 30;
 		config.attackWarningColor		= { 1.0f, 0.55f, 0.10f };
 
 		return config;
@@ -51,6 +52,7 @@ namespace
 		config.hitAnimationName			= "ResonanceCaster_Hit";
 		config.deathAnimationName		= "ResonanceCaster_Death";
 		config.attackNodeName			= "mixamorig:Spine2";
+		config.lockOnNodeName			= "mixamorig:Spine2";
 
 		// 近づきすぎると後退し、胸部から低速の共鳴弾を1発撃つ
 		config.attackType				= EnemyAttackType::ResonanceProjectile;
