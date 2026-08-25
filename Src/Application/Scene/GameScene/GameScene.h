@@ -7,6 +7,7 @@ class LockOnTargetManager;
 class Player;
 class ScreenFlash;
 class CharacterSeparation;
+class BattleFlow;
 
 class GameScene : public BaseScene
 {
@@ -37,4 +38,5 @@ private:
 	//===========================================================
 	std::shared_ptr<LockOnTargetManager> m_spLockOnTargetManager;
 	std::shared_ptr<CharacterSeparation> m_spCharacterSeparation;
+	std::shared_ptr<BattleFlow>			m_spBattleFlow;
 };

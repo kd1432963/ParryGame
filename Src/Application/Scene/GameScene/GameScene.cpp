@@ -20,6 +20,7 @@
 #include "../../GameObject/UI/LockOnMarker/LockOnMarker.h"
 #include "../../Combat/LockOn/LockOnTargetManager.h"
 #include "../../GameObject/Physics/CharacterSeparation.h"
+#include "../../GameFlow/BattleFlow.h"
 
 void GameScene::Event()
 {
@@ -78,12 +79,19 @@ void GameScene::Init()
 	AddObject(player);
 
 	//==========================================================
+	// バトル進行管理クラス生成
+	//==========================================================
+	m_spBattleFlow = std::make_shared<BattleFlow>();
+	m_spBattleFlow->SetPlayer(player);
+
+	//==========================================================
 	// 近接型の敵生成
 	//==========================================================
 	auto golem = std::make_shared<Enemy>(EnemyType::Golem);
 	golem->Init();
 	golem->SetPos({ -2.5f, 0.0f, 6.0f });
 	golem->SetPlayer(player);
+	m_spBattleFlow->RegisterEnemy(golem);
 
 	m_spCharacterSeparation->RegisterBody(
 		golem,
@@ -92,6 +100,8 @@ void GameScene::Init()
 	);
 
 	AddObject(golem);
+
+	AddObject(m_spBattleFlow);
 
 	//==========================================================
 	// 遠距離型の敵生成
@@ -103,6 +113,7 @@ void GameScene::Init()
 	resonanceCaster->Init();
 	resonanceCaster->SetPos({ 3.5f, 0.0f, 8.0f });
 	resonanceCaster->SetPlayer(player);
+	m_spBattleFlow->RegisterEnemy(resonanceCaster);
 
 	m_spCharacterSeparation->RegisterBody(
 		resonanceCaster,

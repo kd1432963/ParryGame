@@ -142,6 +142,9 @@
     <Filter Include="Src\Application\Combat\LockOn">
       <UniqueIdentifier>{21e69394-7305-4f79-9802-edb40ce7b28d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\GameFlow">
+      <UniqueIdentifier>{5b288c3f-608a-4b3a-8192-0222ec945cd0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -414,6 +417,9 @@
     <ClInclude Include="Src\Application\GameObject\Physics\CharacterSeparation.h">
       <Filter>Src\Application\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\GameFlow\BattleFlow.h">
+      <Filter>Src\Application\GameFlow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -640,6 +646,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Physics\CharacterSeparation.cpp">
       <Filter>Src\Application\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameFlow\BattleFlow.cpp">
+      <Filter>Src\Application\GameFlow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
