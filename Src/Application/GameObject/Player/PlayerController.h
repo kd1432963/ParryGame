@@ -27,6 +27,7 @@ public:
 	//===========================================================
 	void SetPlayer(const std::shared_ptr<Player>& player)		{ m_wpPlayer = player; }
 	void SetCamera(const std::shared_ptr<CameraBase>& camera)	{ m_wpCamera = camera; }
+	void SetInputEnabled(bool isEnabled);
 	void SetLockOnTargetManager(
 		const std::shared_ptr<LockOnTargetManager>& targetManager
 	)

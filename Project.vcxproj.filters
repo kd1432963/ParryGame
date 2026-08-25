@@ -145,6 +145,9 @@
     <Filter Include="Src\Application\GameFlow">
       <UniqueIdentifier>{5b288c3f-608a-4b3a-8192-0222ec945cd0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\GameObject\UI\BattleResultUI">
+      <UniqueIdentifier>{7af04ac8-c390-40fd-8bd8-33588e7918a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -420,6 +423,9 @@
     <ClInclude Include="Src\Application\GameFlow\BattleFlow.h">
       <Filter>Src\Application\GameFlow</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\UI\BattleResultUI\BattleResultUI.h">
+      <Filter>Src\Application\GameObject\UI\BattleResultUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -649,6 +655,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameFlow\BattleFlow.cpp">
       <Filter>Src\Application\GameFlow</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\UI\BattleResultUI\BattleResultUI.cpp">
+      <Filter>Src\Application\GameObject\UI\BattleResultUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

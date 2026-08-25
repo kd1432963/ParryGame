@@ -252,6 +252,14 @@ bool Application::Init(int w, int h)
 	// フォント初期化
 	//===================================================================
 	KdFontManager::Instance().Init(GetWindowHandle());
+
+	// 実行するPCに依存しないよう、ゲームへ同梱したフォントを登録する
+	constexpr char	kGameFontFilePath[]	= "Asset/Fonts/Audiowide/Audiowide-Regular.ttf";
+	constexpr char	kGameFontName[]		= "Audiowide";
+	constexpr int	kGameFontHeight		= 32;
+
+	KdFontManager::Instance().AddFontResource(kGameFontFilePath);
+	KdFontManager::Instance().AddFont(0, kGameFontName, kGameFontHeight);
 	
 	//===================================================================
 	// ゲーム固有の初期化

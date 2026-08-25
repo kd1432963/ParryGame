@@ -21,10 +21,27 @@
 #include "../../Combat/LockOn/LockOnTargetManager.h"
 #include "../../GameObject/Physics/CharacterSeparation.h"
 #include "../../GameFlow/BattleFlow.h"
+#include "../../GameObject/UI/BattleResultUI/BattleResultUI.h"
 
 void GameScene::Event()
 {
-	
+	if (!m_spBattleFlow || !m_spPlayerController) return;
+
+	// 押し続けではなく、Enterを押した瞬間だけを取得する
+	const bool	isEnterKeyDown	= (GetAsyncKeyState(VK_RETURN) & 0x8000) != 0;
+	const bool	isEnterPressed	= isEnterKeyDown && !m_wasEnterKeyDown;
+
+	m_wasEnterKeyDown = isEnterKeyDown;
+
+	// 戦闘終了後はプレイヤーへの操作入力を停止する
+	const bool isPlaying = m_spBattleFlow->GetState() == BattleState::Playing;
+
+	m_spPlayerController->SetInputEnabled(isPlaying);
+
+	// 終了画面でEnterが押されたら、現在のGameSceneを最初から作り直す
+	if (isPlaying || !isEnterPressed) return;
+
+	SceneManager::Instance().RequestReload();
 }
 
 void GameScene::Init()
@@ -127,11 +144,11 @@ void GameScene::Init()
 	//==========================================================
 	// プレイヤーコントローラー生成
 	//==========================================================
-	auto playerController = std::make_shared<PlayerController>();
-	playerController->SetPlayer(player);
-	playerController->SetCamera(camera);
-	playerController->SetLockOnTargetManager(m_spLockOnTargetManager);
-	AddObject(playerController);
+	m_spPlayerController = std::make_shared<PlayerController>();
+	m_spPlayerController->SetPlayer(player);
+	m_spPlayerController->SetCamera(camera);
+	m_spPlayerController->SetLockOnTargetManager(m_spLockOnTargetManager);
+	AddObject(m_spPlayerController);
 
 	//==========================================================
 	// ロックオンコントローラー生成
@@ -169,6 +186,14 @@ void GameScene::Init()
 	// ダメージ時のエフェクト
 	//==========================================================
 	SetupDamageEffect(player, camera, screenFlash);
+
+	//==========================================================
+	// バトル結果UI生成
+	//==========================================================
+	auto battleResultUI = std::make_shared<BattleResultUI>();
+	battleResultUI->SetBattleFlow(m_spBattleFlow);
+	battleResultUI->Init();
+	AddObject(battleResultUI);
 }
 
 //==========================================================

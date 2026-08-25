@@ -28,6 +28,16 @@ void PlayerController::PreUpdate()
 }
 
 //===========================================================
+// プレイヤー入力の有効・無効を切り替える
+//===========================================================
+void PlayerController::SetInputEnabled(bool isEnabled)
+{
+	m_isInputEnabled = isEnabled;
+
+	if (!m_isInputEnabled) ClearInput();
+}
+
+//===========================================================
 // 入力状態をクリアする関数
 //===========================================================
 void PlayerController::ClearInput()

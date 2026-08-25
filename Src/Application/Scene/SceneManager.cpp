@@ -6,8 +6,13 @@
 
 void SceneManager::PreUpdate()
 {
-	// シーン切替
-	if (m_currentSceneType != m_nextSceneType)
+	// 再読み込み要求は、現在の更新が終わった次のフレームで処理する
+	if (m_isReloadRequested)
+	{
+		m_isReloadRequested = false;
+		ChangeScene(m_currentSceneType);
+	}
+	else if (m_currentSceneType != m_nextSceneType)
 	{
 		ChangeScene(m_nextSceneType);
 	}

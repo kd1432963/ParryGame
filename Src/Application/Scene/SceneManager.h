@@ -34,6 +34,12 @@ public :
 	// 現在のシーンにオブジェクトを追加
 	void AddObject(const std::shared_ptr<KdGameObject>& _obj);
 
+	// 現在と同じ種類のシーンを次のフレームで作り直す
+	void RequestReload()
+	{
+		m_isReloadRequested = true;
+	}
+
 private :
 
 	// マネージャーの初期化
@@ -55,6 +61,9 @@ private :
 	
 	// 次のシーンの種類を保持している変数
 	SceneType m_nextSceneType = m_currentSceneType;
+
+	// 現在のシーンを安全なタイミングで再生成するための要求
+	bool m_isReloadRequested = false;
 
 private:
 
