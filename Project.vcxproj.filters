@@ -127,6 +127,9 @@
     <Filter Include="Src\Application\GameObject\Effect\ParryEffect">
       <UniqueIdentifier>{9966fa08-45db-4f11-a790-4783b973fa6d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\GameObject\Effect\ScreenFlash">
+      <UniqueIdentifier>{483321e1-02e6-4f76-b3a1-171602eb843d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -369,6 +372,9 @@
     <ClInclude Include="Src\Application\GameObject\Effect\ParryEffect\ParryEffect.h">
       <Filter>Src\Application\GameObject\Effect\ParryEffect</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\GameObject\Effect\ScreenFlash\ScreenFlash.h">
+      <Filter>Src\Application\GameObject\Effect\ScreenFlash</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -571,6 +577,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\GameObject\Effect\ParryEffect\ParryEffect.cpp">
       <Filter>Src\Application\GameObject\Effect\ParryEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\GameObject\Effect\ScreenFlash\ScreenFlash.cpp">
+      <Filter>Src\Application\GameObject\Effect\ScreenFlash</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

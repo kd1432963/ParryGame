@@ -284,6 +284,7 @@
     <ClInclude Include="Src\Application\GameObject\Camera\FPSCamera\FPSCamera.h" />
     <ClInclude Include="Src\Application\GameObject\Camera\TPSCamera\TPSCamera.h" />
     <ClInclude Include="Src\Application\GameObject\Effect\ParryEffect\ParryEffect.h" />
+    <ClInclude Include="Src\Application\GameObject\Effect\ScreenFlash\ScreenFlash.h" />
     <ClInclude Include="Src\Application\GameObject\Enemy\Enemy.h" />
     <ClInclude Include="Src\Application\GameObject\Enemy\EnemyConfig.h" />
     <ClInclude Include="Src\Application\GameObject\Enemy\EnemyState.h" />
@@ -357,6 +358,7 @@
     <ClCompile Include="Src\Application\GameObject\Camera\FPSCamera\FPSCamera.cpp" />
     <ClCompile Include="Src\Application\GameObject\Camera\TPSCamera\TPSCamera.cpp" />
     <ClCompile Include="Src\Application\GameObject\Effect\ParryEffect\ParryEffect.cpp" />
+    <ClCompile Include="Src\Application\GameObject\Effect\ScreenFlash\ScreenFlash.cpp" />
     <ClCompile Include="Src\Application\GameObject\Enemy\Enemy.cpp" />
     <ClCompile Include="Src\Application\GameObject\Enemy\EnemyConfig.cpp" />
     <ClCompile Include="Src\Application\GameObject\Enemy\EnemyState.cpp" />

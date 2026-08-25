@@ -4,6 +4,7 @@
 
 class Player;
 class BaseCamera;
+class ScreenFlash;;
 
 class GameScene : public BaseScene
 {
@@ -20,10 +21,12 @@ private:
 
 	void SetupParrySuccessEffect(
 		const std::shared_ptr<Player>&		player,
-		const std::shared_ptr<CameraBase>&	camera
+		const std::shared_ptr<CameraBase>&	camera,
+		const std::shared_ptr<ScreenFlash>& screenFlash
 	);
 	void SetupDamageEffect(
 		const std::shared_ptr<Player>& player,
-		const std::shared_ptr<CameraBase>& camera
+		const std::shared_ptr<CameraBase>& camera,
+		const std::shared_ptr<ScreenFlash>& screenFlash
 	);
 };

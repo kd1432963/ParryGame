@@ -14,6 +14,7 @@
 #include "../../Combat/IParryable.h"
 #include "../../Time/HitStop.h"
 #include "../../GameObject/Effect/ParryEffect/ParryEffect.h"
+#include "../../GameObject/Effect/ScreenFlash/ScreenFlash.h"
 
 void GameScene::Event()
 {
@@ -74,14 +75,20 @@ void GameScene::Init()
 	camera->SetTarget(player);
 
 	//==========================================================
+	// エフェクト生成
+	//==========================================================
+	auto screenFlash = std::make_shared<ScreenFlash>();
+	AddObject(screenFlash);
+
+	//==========================================================
 	// パリィ成功時のエフェクト
 	//==========================================================
-	SetupParrySuccessEffect(player, camera);
+	SetupParrySuccessEffect(player, camera, screenFlash);
 
 	//==========================================================
 	// ダメージ時のエフェクト
 	//==========================================================
-	SetupDamageEffect(player, camera);
+	SetupDamageEffect(player, camera, screenFlash);
 }
 
 //==========================================================
@@ -103,21 +110,25 @@ void GameScene::DebugUpdate()
 //==========================================================
 void GameScene::SetupParrySuccessEffect(
 	const std::shared_ptr<Player>&		player,
-	const std::shared_ptr<CameraBase>&	camera
+	const std::shared_ptr<CameraBase>&	camera,
+	const std::shared_ptr<ScreenFlash>& screenFlash
 )
 {
-	const std::weak_ptr<CameraBase> wpCamera = camera;
+	const std::weak_ptr<CameraBase>		wpCamera		= camera;
+	const std::weak_ptr<ScreenFlash>	wpScreenFlash	= screenFlash;
 
 	player->SetParrySuccessCallback(
-		[wpCamera](
+		[wpCamera, wpScreenFlash](
 			const Math::Vector3&					hitPos,
 			ParryResult								result,
 			const std::shared_ptr<KdGameObject>&	parriedObj
 			)
 		{
 			const auto camera = wpCamera.lock();
-
 			if (!camera) return;
+
+			const auto screenFlash = wpScreenFlash.lock();
+			if (!screenFlash) return;
 
 			//==========================================================
 			// カメラ揺れの設定
@@ -180,6 +191,24 @@ void GameScene::SetupParrySuccessEffect(
 			//==========================================================
 			auto parryEffect = std::make_shared<ParryEffect>();
 			parryEffect->Play(hitPos);
+
+			//==========================================================
+			// スクリーンフラッシュを始める
+			//==========================================================
+			ScreenFlashSettings flashSettings{};
+
+			flashSettings.color = { 0.35f, 0.85f, 1.0f };
+			flashSettings.peakOpacity = 0.12f;
+			flashSettings.fadeDuration = 0.10f;
+
+			if (result == ParryResult::Defeated)
+			{
+				flashSettings.color			= { 1.0f, 0.75f, 0.20f };
+				flashSettings.peakOpacity	= 0.20f;
+				flashSettings.fadeDuration	= 0.18f;
+			}
+
+			screenFlash->Start(flashSettings);
 		}
 	);
 }
@@ -189,9 +218,55 @@ void GameScene::SetupParrySuccessEffect(
 //==========================================================
 void GameScene::SetupDamageEffect(
 	const std::shared_ptr<Player>&		player, 
-	const std::shared_ptr<CameraBase>&	camera)
+	const std::shared_ptr<CameraBase>&	camera,
+	const std::shared_ptr<ScreenFlash>& screenFlash)
 {
-	const std::weak_ptr<CameraBase> wpCamera = camera;
+	const std::weak_ptr<CameraBase>		wpCamera		= camera;
+	const std::weak_ptr<ScreenFlash>	wpScreenFlash	= screenFlash;
 
-	
+	player->SetDamageHitCallback(
+		[wpCamera, wpScreenFlash](const Math::Vector3& hitPos)
+		{
+			const auto camera = wpCamera.lock();
+			if (!camera) return;
+
+			const auto screenFlash = wpScreenFlash.lock();
+			if (!screenFlash) return;
+
+			//==========================================================
+			// カメラ揺れの設定
+			//==========================================================
+			CameraShakeSettings shakeSettings{};
+			shakeSettings.durationSeconds		= 0.22f;
+			shakeSettings.samplesPerSecond		= 40.0f;
+			shakeSettings.maxPositionOffset		= Math::Vector3(0.1f, 0.1f, 0.0f);
+			shakeSettings.maxRotationDegrees	= Math::Vector3(0.5f, 0.5f, 0.5f);
+			camera->StartShake(shakeSettings);
+
+			//==========================================================
+			// カメラズームの設定
+			//==========================================================
+			CameraZoomSettings zoomSettings{};
+			zoomSettings.targetFieldOfView	= 50.0f;
+			zoomSettings.zoomInDuration		= 0.045f;
+			zoomSettings.holdDuration		= 0.06f;
+			zoomSettings.zoomOutDuration	= 0.28f;
+			camera->StartZoom(zoomSettings);
+			
+			//==========================================================
+			// ヒットストップの設定
+			//==========================================================
+			Application::Instance().StartHitStop(0.22f, 0.2f);
+			
+			//==========================================================
+			// スクリーンフラッシュを始める
+			//==========================================================
+			ScreenFlashSettings flashSettings{};
+			flashSettings.color			= { 1.0f, 0.15f, 0.10f };
+			flashSettings.peakOpacity	= 0.20f;
+			flashSettings.fadeDuration	= 0.14f;
+
+			screenFlash->Start(flashSettings);
+		}
+	);
 }
